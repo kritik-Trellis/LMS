@@ -1,0 +1,16 @@
+{% load staticfiles %}
+<html>
+<head>
+<title>Welcome</title>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+<section>
+<div>
+<h1>hi, {{ request.user }}</h1>
+<p>Choose your options...</p>
+<a href="{% url 'applyleave' %}">Apply For Leave</a>
+<a href="{% url 'view_my_leave_table' %}">Status</a>
+<a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>

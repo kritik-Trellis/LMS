@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<html>
+<head>
+<title>LMS - TrellisSoft</title>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+<section>
+<div>
+<h1>TrellisSoft - LMS</h1>
+<p>Leave Management Systsem (LMS) is a simple Python-Django based application used to handle Leave applications. Please login to continue...</p>
+<a href='{% url 'login' %}'>LOGIN</a>
+<a href='{% url 'register' %}'>REGISTER</a>
+</body>
+</html>
