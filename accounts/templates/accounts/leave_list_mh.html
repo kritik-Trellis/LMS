@@ -1,1 +1,11 @@
-{{ leave_list }}
+ <!-- {{ leave_list }} -->
+ <ul>
+ {% for leave in leave_list %}
+<li> {{leave.user}} </li>
+<li>{{ leave.leavetype }}</li>
+<li> {{leave.status}} </li>
+<li> {{leave.id}} </li>
+<li><a href="{% url 'approve' leave.id %}">approve</a>
+<li><a href="{% url 'disapprove' leave.id %}">reject</a>
+ {% endfor %}
+</ul>
