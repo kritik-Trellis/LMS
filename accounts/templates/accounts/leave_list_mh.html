@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
 <head>
 <title>View Leaves</title>
@@ -31,3 +32,16 @@
 
 </body>
 </html>
+=======
+ <!-- {{ leave_list }} -->
+ <ul>
+ {% for leave in leave_list %}
+<li> {{leave.user}} </li>
+<li>{{ leave.leavetype }}</li>
+<li> {{leave.status}} </li>
+<li> {{leave.id}} </li>
+<li><a href="{% url 'approve' leave.id %}">approve</a>
+<li><a href="{% url 'disapprove' leave.id %}">reject</a>
+ {% endfor %}
+</ul>
+>>>>>>> e1de11900f1fa939d45b34c5e786a73cc65c2791

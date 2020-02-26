@@ -140,6 +140,7 @@ def view_my_leave_table(request):
 def leaves_list_mh(request):
 	leaves = Leave.objects.all_pending_leaves()
 	return render(request,'accounts/leave_list_mh.html',{'leave_list':leaves,'title':'leaves list - pending'})
+<<<<<<< HEAD
 
 @login_required(login_url='login')
 def leaves_view(request,id):
@@ -186,3 +187,27 @@ def leaves_approved_list(request):
 def leaves_rejected_list(request):
 	leaves = Leave.objects.all_rejected_leaves() #rejected leaves -> calling model manager method
 	return render(request,'accounts/all_leaves_rejected.html',{'leave_list':leaves,'title':'rejected leave list'})
+=======
+    
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['manager','hr'])
+def approve(request,id):
+    print(id)
+    leave = get_object_or_404(Leave, pk=id)
+    leave.status = "approved"
+    leave.is_approved=True
+    leave.save()
+    leaves = Leave.objects.all_pending_leaves()
+    return render(request,'accounts/leave_list_mh.html',{'leave_list':leaves,'title':'leaves list - pending'})
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['manager','hr'])
+def disapprove(request,id):
+    leave = get_object_or_404(Leave, pk=id)
+    leave.status = "rejected"
+    levae.is_approved=False
+    leave.save()
+    leaves = Leave.objects.all_pending_leaves()
+    return render(request,'accounts/leave_list_mh.html',{'leave_list':leaves,'title':'leaves list - pending'})
+
+>>>>>>> e1de11900f1fa939d45b34c5e786a73cc65c2791

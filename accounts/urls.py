@@ -20,4 +20,6 @@ urlpatterns = [
     path('login/',views.login_,name="login"),
     path('register/',views.register,name="register"),
     path('logout/',views.logout_,name="logout")
+    path('disapprove/<int:id>',views.disapprove,name="disapprove"),
+    path('approve/<int:id>',views.approve,name="approve"),
 ]
