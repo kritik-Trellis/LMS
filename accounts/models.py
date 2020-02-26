@@ -31,7 +31,7 @@ class Leave(models.Model):
 	startdate = models.DateField(verbose_name=_('Start Date'),null=True,blank=False)
 	enddate = models.DateField(verbose_name=_('End Date'),null=True,blank=False)
 	leavetype = models.CharField(choices=LEAVE_TYPE,max_length=25,default=SICK,null=True,blank=False)
-	reason = models.CharField(verbose_name=_('Reason for Leave'),max_length=255,help_text='add additional information for leave',null=True,blank=True)
+	reason = models.CharField(verbose_name=_('Reason for Leave'),max_length=255,help_text='add additional information for leave',null=True,blank=False,default='Unspecified Reason')
 	defaultdays = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS,null=True,blank=True)
 
 

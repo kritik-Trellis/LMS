@@ -96,7 +96,9 @@ def applyleave(request):
             user = request.user
             instance.user = user
             instance.save()
-            # print("LEAVE APPLIED SUCCESSFULLY!!!")
+            print("LEAVE APPLIED SUCCESSFULLY!!!")
+            print(request.POST['startdate'])
+            print(request.POST['enddate'])
             # messages.success(request,"Submitted Successfully! Check <a href=\"{% url 'view_my_leave_table' %}\">STATUS</a>.")
             return redirect('view_my_leave_table')
         messages.error(request,'Failed to request a leave. Please check the dates')

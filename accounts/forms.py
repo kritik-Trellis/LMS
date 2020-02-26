@@ -15,12 +15,18 @@ class loginUserForm(UserCreationForm):
         model = User
         fields = ['email','password']
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 class LeaveCreationForm(ModelForm):
 	reason = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 27})) ## 33 previous
 	class Meta:
 		model = Leave
-		fields = ['startdate','enddate','leavetype']
+		fields = ['startdate','enddate','leavetype','reason']
+		widgets = {
+            'startdate': DateInput(),
+			'enddate' : DateInput()
+        }
 
 	def clean_enddate(self):
 		enddate = self.cleaned_data['enddate']

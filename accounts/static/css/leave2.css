@@ -89,8 +89,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-
-/* .l-box input[type="date"],
+.l-box input[type="date"],
 input[type="textarea"] {
     border: none;
     border-bottom: 1px solid #fff;
@@ -99,7 +98,7 @@ input[type="textarea"] {
     height: 40px;
     color: #ADB5BF;
     font-size: 16px;
-} */
+}
 
 .l-box input[type="submit"] {
     border: none;
@@ -187,14 +186,4 @@ input[type="textarea"] {
 
 select {
     margin-bottom: 1em;
-}
-
-form.startdate {
-    border: none;
-    border-bottom: 1px solid #fff;
-    background: transparent;
-    outline: none;
-    height: 40px;
-    color: #ADB5BF;
-    font-size: 16px;
 }

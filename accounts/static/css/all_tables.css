@@ -7,3 +7,8 @@ table {
     background-color: #f8fffa;
     text-transform: capitalize;
 }
+
+tr,
+th {
+    border: 1px solid black;
+}

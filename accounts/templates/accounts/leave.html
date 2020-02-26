@@ -60,16 +60,15 @@
     <div class="l-box">
     <img src="{% static 'avatar.png' %}" class="avatar">
         <h1>LEAVE FORM</h1>
-            <form name="myForm">
+            <form action="{% url 'applyleave' %}" method="POST">
+            {% csrf_token %}
             <p>Start Date</p>
             {{ form.startdate }}
             <p>End Date</p>
             {{ form.enddate }}
-            {% comment %} {{ form.leavetype.label }} {% endcomment %}
             {{ form.leavetype }}
 			      <p>Reason</p>
              {{ form.reason }}
-           
             <input type="submit" name="submit">
             </form>
           </div>
