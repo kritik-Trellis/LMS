@@ -64,7 +64,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'sql_server.pyodbc',
         'NAME': 'test3',
-        'HOST': '192.168.0.160',
+        'HOST': '192.168.0.101',
         'USER': 'sa',
         'PASSWORD' : '1mj16cs105',
         'PORT' : '1433',

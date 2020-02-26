@@ -45,20 +45,8 @@
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">    
 </head>
     <body>
-    <nav>
-        <section class="nav-container" style="background: white;">
-            <aside class="logo">
-                <img src="{% static 'trellis-logo.png' %}" height="65px" weidth="100px">
-            </aside>
-            <div class="menu">
-                <ul>
-                    {% comment %} <li>Home</li> {% endcomment %}
-                </ul>
-            </div>
-        </section>
-    </nav>
     <div class="l-box">
-    <img src="{% static 'avatar.png' %}" class="avatar">
+    <img src="{{ employee.image.url }}" class="avatar">
         <h1>LEAVE FORM</h1>
             <form action="{% url 'applyleave' %}" method="POST">
             {% csrf_token %}
@@ -66,6 +54,7 @@
             {{ form.startdate }}
             <p>End Date</p>
             {{ form.enddate }}
+            {{ form.leavetype.label }} - 
             {{ form.leavetype }}
 			      <p>Reason</p>
              {{ form.reason }}
@@ -74,12 +63,6 @@
           </div>
           <div class="footer">
             <p>All rights reserved. Copyright 2020 © TrellisSoft Inc.</p>
-            <div class="icons">
-               <p> <a href="https://www.facebook.com/TrellisSoftInc/"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-                <a href="https://www.instagram.com/trellissoft/"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                <a href="https://www.linkedin.com/company/trellissoft/"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
-                <a href="https://twitter.com/TrellisSoftInc"><i class="fa fa-twitter" aria-hidden="true"></i></a></p>
-        </div>
         </div>
         <script>
           var inputs = document.getElementsByTagName('input');

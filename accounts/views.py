@@ -22,14 +22,17 @@ def dashboard(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles = ['employee'])
 def user(request):
-    context = {}
-    return render(request,'accounts/user.html')
+    employee = Employee.objects.filter(user=request.user).first()
+    context = {'employee':employee}
+    return render(request,'accounts/user.html',context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def manager(request):
-    context = {}
-    return render(request,'accounts/manager.html')
+    employee = Employee.objects.filter(user=request.user).first()
+    leaves = Leave.objects.all_pending_leaves()
+    context = {'employee':employee,'leave_count':len(leaves)}
+    return render(request,'accounts/manager.html',context)
 
 # @login_required(login_url='login')
 # def submitleave(request):
@@ -106,10 +109,12 @@ def applyleave(request):
     else:
         dataset = dict()
         form = LeaveCreationForm()
+        employee= Employee.objects.filter(user = request.user).first() 
         dataset['form'] = form
         dataset['title'] = 'Apply for Leave'
         context = {'form':form,
-                    'dataset':dataset}
+                    'dataset':dataset,
+                    'employee':employee}
         return render(request,'accounts/leave.html',context)
 
 # @login_required(login_url='login')
@@ -138,7 +143,7 @@ def view_my_leave_table(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def leaves_list_mh(request):
 	leaves = Leave.objects.all_pending_leaves()
 	return render(request,'accounts/leave_list_mh.html',{'leave_list':leaves,'title':'leaves list - pending'})
@@ -151,7 +156,7 @@ def leaves_view(request,id):
 	return render(request,'accounts/leave_detail_view.html',{'leave':leave,'employee':employee,'title':'{0}-{1} leave'.format(leave.user.username,leave.status)})
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def leaves_view_mh(request,id):
 	leave = get_object_or_404(Leave, id = id)
 	employee = Employee.objects.filter(user = leave.user)[0]
@@ -160,7 +165,7 @@ def leaves_view_mh(request,id):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def approve_leave(request,id):
 	leave = get_object_or_404(Leave, id = id)
 	user = leave.user
@@ -170,7 +175,7 @@ def approve_leave(request,id):
 	return redirect('leaves_approved_list')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def reject_leave(request,id):
 	leave = get_object_or_404(Leave, id = id)
 	leave.reject_leave
@@ -178,26 +183,26 @@ def reject_leave(request,id):
 	return redirect('leave_rejected_list')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def leaves_approved_list(request):
 	leaves = Leave.objects.all_approved_leaves() #approved leaves -> calling model manager method
 	return render(request,'accounts/all_leaves_approved.html',{'leave_list':leaves,'title':'approved leave list'})
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def leaves_rejected_list(request):
 	leaves = Leave.objects.all_rejected_leaves() #rejected leaves -> calling model manager method
 	return render(request,'accounts/all_leaves_rejected.html',{'leave_list':leaves,'title':'rejected leave list'})
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def unapprove_leave(request,id):
 	leave = get_object_or_404(Leave, id = id)
 	leave.unapprove_leave
 	return redirect('leaves_list_mh') #redirect to unapproved list
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles = ['manager','hr'])
+@allowed_users(allowed_roles = ['manager'])
 def unreject_leave(request,id):
 	leave = get_object_or_404(Leave, id = id)
 	leave.status = 'pending'
