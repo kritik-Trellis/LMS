@@ -17,7 +17,7 @@ class loginUserForm(UserCreationForm):
 
 
 class LeaveCreationForm(ModelForm):
-	reason = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}))
+	reason = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 4, 'cols': 33}))
 	class Meta:
 		model = Leave
 		fields = ['startdate','enddate','leavetype']

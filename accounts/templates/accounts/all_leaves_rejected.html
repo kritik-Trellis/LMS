@@ -1,0 +1,29 @@
+<table>
+<thead>
+<tr>
+    <th>User</th>
+    <th>Type</th>
+    <th>Day(s)</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
+</thead>
+<tbody>
+{% for leave in leave_list %}
+<tr>
+    <td>{{ leave.user }}</td>
+    <td>{{ leave.leavetype}}</td>
+    <td>{{ leave.leave_days }}</td>
+    <td>{{ leave.status }}</td>
+    <td> 
+    <a href="">
+        <span>view</span>
+    </a>
+    <a href="">
+    <span>unapprove</span>
+    </a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>

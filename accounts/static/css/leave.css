@@ -5,6 +5,7 @@ select,
 textarea,
 button {
     font-family: 'Montserrat', sans-serif;
+    background-color: #FAFAFA;
     letter-spacing: -0.2px;
     font-size: 16px;
 }
@@ -17,12 +18,12 @@ p {
 
 form {
     padding: 16px;
-    width: 320px;
+    background-color: white;
+    width: 350px;
     margin: 0 auto;
 }
 
 .segment {
-    padding: 32px 0;
     text-align: center;
 }
 
@@ -31,7 +32,7 @@ input {
     border: 0;
     outline: 0;
     font-size: 16px;
-    border-radius: 320px;
+    border-radius: 5px;
     padding: 16px;
     background-color: #EBECF0;
     text-shadow: 1px 1px 0 rgb(245, 245, 245);
@@ -43,7 +44,8 @@ label {
     width: 100%;
 }
 
-input {
+input,
+textarea {
     margin-right: 8px;
     box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px rgb(223, 223, 223);
     width: 100%;
@@ -53,7 +55,9 @@ input {
     -webkit-appearance: none;
 }
 
-input:focus {
+textarea:focus,
+input:focus,
+select:focus {
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px rgb(238, 237, 237);
 }
 
@@ -109,4 +113,25 @@ button.red {
 .input-group label {
     margin: 0;
     flex: 1;
+}
+
+textarea {
+    border: 0;
+    outline: 0;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 16px;
+    background-color: #EBECF0;
+    text-shadow: 1px 1px 0 rgb(245, 245, 245);
+}
+
+select {
+    border: 0;
+    outline: 0;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 16px;
+    width: 100%;
+    background-color: #EBECF0;
+    text-shadow: 1px 1px 0 rgb(245, 245, 245);
 }

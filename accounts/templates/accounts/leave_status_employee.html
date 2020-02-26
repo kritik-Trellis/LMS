@@ -1,1 +1,27 @@
-{{ dataset }}
+<html>
+<head>
+<title>View Leaves</title>
+</head>
+<body>
+<table>
+<thead>
+<th>Type</th>
+<th>Day(s)</th>
+<th>Status</th>
+<th></th>
+</thead>
+<tbody>
+{% for leave in dataset.leave_list %}
+<tr><td>{{ leave.leavetype }}</td>
+<td>{{ leave.leave_days }}</td>
+{% if leave.is_approved %}
+<td style="color:green;">Approved</td>
+{% else %}
+<td style="color:red;">{{ leave.status }}</td>
+{% endif %}
+<td><a href="{% url 'leaves_view' leave.id %}">view</a></td>
+{% endfor %}
+</tr>
+</tbody>
+</body>
+</html>

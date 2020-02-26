@@ -1,0 +1,8 @@
+{{ leave }}<br>
+{{ employee }}<br>
+{{ title }}
+{% if leave.is_approved %}
+<h1>already approved</h1>
+{% else %}
+<h1><a href="{% url 'approve_leave' leave.id %}">approve</a> or <a href="{% url 'reject_leave' leave.id %}">reject</a></h1>
+{% endif %}

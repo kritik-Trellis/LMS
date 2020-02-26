@@ -3,7 +3,7 @@
 <html lang="en" >
   <head>
     <meta charset="UTF-8">
-    <title>Log In</title>
+    <title>Leave Form</title>
     <link rel='stylesheet' href='https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css'>
     <link rel="stylesheet" href="{% static 'css/leave.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,15 +16,23 @@
         <h1>Leave Form</h1>
       </div>
 	  <label>
-	  	{{ form }}
+	  	{{ form.startdate.label }}
+		{{ form.startdate }}
+	  </label>
+	  <label>
+	  	{{ form.enddate.label }}
+		{{ form.enddate }}
+	  </label>
+	  <label>
+	  	{{ form.leavetype.label }}
+		{{ form.leavetype }}
+	  </label>
+	  <label>
+	  	{{ form.reason.label }}
+		{{ form.reason }}
 	  </label>
       <button class="red" type="submit"><i class="icon ion-md-paper"></i> Submit leave</button>
     </form>
-    <div class="segment">
-        {% for message in messages %}
-            {{ message }}
-        {% endfor %}
-    </div>
 </body>
 </html>
 

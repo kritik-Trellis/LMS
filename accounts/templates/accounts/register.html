@@ -1,23 +1,48 @@
-<h1>REGISTER FORM</h1>
-<form method="POST" action="">
-{% csrf_token %}
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel='stylesheet' href='https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css'>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat:500,700&amp;display=swap'>
+  </head>
+  <body>
+    <form method="POST" action="">
+        {% csrf_token %}
 
-{{ form.username.label }}
-{{ form.username }}
-
-{{ form.email.label }}
-{{ form.email }}
-
-{{ form.password1.label }}
-{{ form.password1 }}
-
-{{ form.password2.label }}
-{{ form.password2 }}
-
-<input type="submit" value="submit" />
-</form>
-
-{% for message in messages %}
-    {{ message }}
-{% endfor %}
+      <div class="segment">
+        <h1>Sign Up</h1>
+      </div>
+      <label>
+        {{ form.username }}
+      </label>
+      <label>
+        {{ form.email }}
+      </label>
+      <label>
+        {{ form.password1 }}
+      </label>
+      <label>
+        {{ form.password2 }}
+      </label>
+      <button class="red" type="submit"><i class="icon ion-md-lock"></i> Sign up</button>
+    </form>
+    <div class="segment">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    <script>
+    
+        var formfields = document.getElementsByTagName('input');
+        formfields[1].placeholder="User Name";
+        formfields[2].placeholder="Email";
+        formfields[3].placeholder="Password";
+        formfields[4].placeholder="Confirm Password";
+    </script>
+</body>
+</html>
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate,login,logout
@@ -131,6 +131,7 @@ def view_my_leave_table(request):
     dataset['title'] = 'Leaves List'
     context={'dataset':dataset}
     print(dataset)
+    print(context)
     return render(request,'accounts/leave_status_employee.html',context)
 
 
@@ -139,3 +140,49 @@ def view_my_leave_table(request):
 def leaves_list_mh(request):
 	leaves = Leave.objects.all_pending_leaves()
 	return render(request,'accounts/leave_list_mh.html',{'leave_list':leaves,'title':'leaves list - pending'})
+
+@login_required(login_url='login')
+def leaves_view(request,id):
+	leave = get_object_or_404(Leave, id = id)
+	employee = Employee.objects.filter(user = leave.user)[0]
+	print(employee)
+	return render(request,'accounts/leave_detail_view.html',{'leave':leave,'employee':employee,'title':'{0}-{1} leave'.format(leave.user.username,leave.status)})
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['manager','hr'])
+def leaves_view_mh(request,id):
+	leave = get_object_or_404(Leave, id = id)
+	employee = Employee.objects.filter(user = leave.user)[0]
+	print(employee)
+	return render(request,'accounts/leave_detail_view_mh.html',{'leave':leave,'employee':employee,'title':'{0}-{1} leave'.format(leave.user.username,leave.status)})
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['manager','hr'])
+def approve_leave(request,id):
+	leave = get_object_or_404(Leave, id = id)
+	user = leave.user
+	employee = Employee.objects.filter(user = user)[0]
+	leave.approve_leave
+	messages.error(request,'Leave successfully approved for {0}'.format(employee.get_full_name),extra_tags = 'alert alert-success alert-dismissible show')
+	return redirect('leaves_approved_list')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['manager','hr'])
+def reject_leave(request,id):
+	leave = get_object_or_404(Leave, id = id)
+	leave.reject_leave
+	messages.success(request,'Leave is rejected',extra_tags = 'alert alert-success alert-dismissible show')
+	return redirect('leave_rejected_list')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['manager','hr'])
+def leaves_approved_list(request):
+	leaves = Leave.objects.all_approved_leaves() #approved leaves -> calling model manager method
+	return render(request,'accounts/all_leaves_approved.html',{'leave_list':leaves,'title':'approved leave list'})
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['manager','hr'])
+def leaves_rejected_list(request):
+	leaves = Leave.objects.all_rejected_leaves() #rejected leaves -> calling model manager method
+	return render(request,'accounts/all_leaves_rejected.html',{'leave_list':leaves,'title':'rejected leave list'})
