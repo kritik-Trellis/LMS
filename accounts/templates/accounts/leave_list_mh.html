@@ -1,47 +1,35 @@
-<<<<<<< HEAD
+{% load staticfiles %}
 <html>
 <head>
-<title>View Leaves</title>
+<title>Leave Status</title>
+<link rel="stylesheet" href="{% static 'css/all_leaves.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-<table>
-<thead>
-<th>Employee</th>
-<th>Type</th>
-<th>Day(s)</th>
-<th>Status</th>
-<th></th>
-</thead>
-<tbody>
-{% for leave in leave_list %}
-<tr>
-<td>{{ leave.user }}</td>
-<td>{{ leave.leavetype }}</td>
-<td>{{ leave.leave_days }}</td>
-{% if leave.is_approved %}
-<td style="color:green;">Approved</td>
-{% else %}
-<td style="color:red;">{{ leave.status }}</td>
-{% endif %}
-<td><a href="{% url 'leaves_view_mh' leave.id %}">view</a></td>
-{% endfor %}
-</tr>
-</tbody>
-
+<section>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+    <th>Employee</th>
+    <th>Type</th>
+    <th>Day(s)</th>
+    <th>Status</th>
+    <th>Actions</th>
+    </tr>
+    </thead>
+  <tbody>
+    {% for leave in leave_list %}
+    <tr>
+    <td>{{ leave.user }}</td>
+    <td>{{ leave.leavetype }}</td>
+    <td>{{ leave.leave_days }}</td>
+    <td style="color:red;">{{ leave.status }}</td>
+    <td><a href="{% url 'leaves_view_mh' leave.id %}">view</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</section>
 <h1><a href="{% url 'leaves_approved_list' %}">All approved</a> or <a href="{% url 'leave_rejected_list' %}">all rejected</a></h1>
-
 </body>
 </html>
-=======
- <!-- {{ leave_list }} -->
- <ul>
- {% for leave in leave_list %}
-<li> {{leave.user}} </li>
-<li>{{ leave.leavetype }}</li>
-<li> {{leave.status}} </li>
-<li> {{leave.id}} </li>
-<li><a href="{% url 'approve' leave.id %}">approve</a>
-<li><a href="{% url 'disapprove' leave.id %}">reject</a>
- {% endfor %}
-</ul>
->>>>>>> e1de11900f1fa939d45b34c5e786a73cc65c2791

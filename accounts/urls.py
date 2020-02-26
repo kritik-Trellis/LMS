@@ -14,12 +14,12 @@ urlpatterns = [
     path('leaves/view_status/view/<int:id>/',views.leaves_view,name="leaves_view"),
     path('leaves/view_status_mh/view/<int:id>/',views.leaves_view_mh,name="leaves_view_mh"),
     path('leaves/view_status_mh/view/<int:id>/approve/',views.approve_leave,name="approve_leave"),
+    path('leaves/view_status_mh/view/<int:id>/unapprove/',views.unapprove_leave,name="unapprove_leave"),
     path('leaves/view_status_mh/view/<int:id>/reject/',views.reject_leave,name="reject_leave"),
+    path('leaves/view_status_mh/view/<int:id>/unreject/',views.unreject_leave,name="unreject_leave"),
     path('leaves/view/approved_leaves/',views.leaves_approved_list,name="leaves_approved_list"),
     path('leaves/view/rejected_leaves/',views.leaves_rejected_list,name="leave_rejected_list"),
     path('login/',views.login_,name="login"),
     path('register/',views.register,name="register"),
     path('logout/',views.logout_,name="logout")
-    path('disapprove/<int:id>',views.disapprove,name="disapprove"),
-    path('approve/<int:id>',views.approve,name="approve"),
 ]

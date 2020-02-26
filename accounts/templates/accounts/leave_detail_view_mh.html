@@ -1,8 +1,37 @@
-{{ leave }}<br>
-{{ employee }}<br>
-{{ title }}
-{% if leave.is_approved %}
-<h1>already approved</h1>
-{% else %}
-<h1><a href="{% url 'approve_leave' leave.id %}">approve</a> or <a href="{% url 'reject_leave' leave.id %}">reject</a></h1>
-{% endif %}
+{% load staticfiles %}
+<html>
+<head>
+<title>Leave Status</title>
+<link rel="stylesheet" href="{% static 'css/all_leaves.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<section>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+    <th>Employee</th>
+    <th>Type</th>
+    <th>Day(s)</th>
+    <th>Status</th>
+    <th>Actions</th>
+    </tr>
+    </thead>
+  <tbody>
+    <tr>
+    <td>{{ employee }}</td>
+    <td>{{ leave.leavetype }}</td>
+    <td>{{ leave.leave_days }}</td>
+    {% if leave.is_approved %}
+    <td style="color:green;">Approved</td>
+    <td>-</td>
+    {% else %}
+    <td style="color:red;">{{ leave.status }}</td>
+    <td><a href="{% url 'approve_leave' leave.id %}">approve</a> | <a href="{% url 'reject_leave' leave.id %}">reject</a></td>
+    {% endif %}
+    </tr>
+    </tbody>
+</table>
+</section>
+</body>
+</html>

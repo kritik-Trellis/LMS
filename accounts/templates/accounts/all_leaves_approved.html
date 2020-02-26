@@ -1,16 +1,25 @@
-<table>
-<thead>
-<tr>
-    <th scope="col">User</th>
-    <th scope="col">Type</th>
-    <th scope="col">Day(s)</th>
-    <th scope="col">Status</th>
-    <th scope="col">Actions</th>
-</tr>
-</thead>
-<tbody>
-{% for leave in leave_list %}
-<tr>
+{% load staticfiles %}
+<html>
+<head>
+<title>All Approved Leaves</title>
+<link rel="stylesheet" href="{% static 'css/all_leaves.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<section>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+    <th>User</th>
+    <th>Type</th>
+    <th>Day(s)</th>
+    <th>Status</th>
+    <th>Actions</th>
+    </tr>
+    </thead>
+  <tbody>
+    {% for leave in leave_list %}
+    <tr>
     <td>{{ leave.user }}</td>
     <td>{{ leave.leavetype}}</td>
     <td>{{ leave.leave_days }}</td>
@@ -18,12 +27,15 @@
     <td> 
     <a href="{% url 'leaves_view_mh' leave.id %}">
         <span>view</span>
-    </a>
-    <a href="">
+    </a> 
+    | <a href="{% url 'unapprove_leave' leave.id %}">
     <span>unapprove</span>
     </a>
     </td>
-</tr>
-{% endfor %}
-</tbody>
+    </tr>
+    {% endfor %}
+    </tbody>
 </table>
+</section>
+</body>
+</html>
