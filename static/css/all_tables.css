@@ -1,11 +1,11 @@
+section {
+    margin: 5%;
+}
+
 table {
     text-align: center;
     background-color: #f8fffa;
     text-transform: capitalize;
-}
-
-section {
-    margin: 0% 5%;
 }
 
 tr,
