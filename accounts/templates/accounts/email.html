@@ -1,0 +1,33 @@
+{% load static %}
+<html>
+<head>
+<title>Leave Status</title>
+<link rel="stylesheet" href="{% static 'css/all_tables.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<section>
+  <h1 align="center">TrellisSoft</h1>
+  <h2 align="center">Employee Leave Details</h2>
+<table class="table" border=2 align="center">
+  <thead class="thead-dark">
+   <th><h3>Employee Name</h3></th>
+    <th><h3>Start Date</h3></th>
+    <th><h3>End Date</h3></th>
+    <th><h3>Leave Type</h3></th>
+      <th><h3>Reason</h3></th>
+     </tr>
+    </thead>
+  <tbody>
+    <tr>
+    <td align="center">{{ user }}</td>
+    <td align="center">{{ startdate }}</td>
+    <td align="center">{{ enddate }}</td>
+    <td align="center">{{ leavetype }}</td>
+    <td align="center">{{ reason }}</td>
+    </tr>
+    </tbody>
+</table>
+</section>
+</body>
+</html>
