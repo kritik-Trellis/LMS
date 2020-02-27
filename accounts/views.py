@@ -103,8 +103,30 @@ def applyleave(request):
             print(request.POST['startdate'])
             print(request.POST['enddate'])
             # messages.success(request,"Submitted Successfully! Check <a href=\"{% url 'view_my_leave_table' %}\">STATUS</a>.")
+
+
+            from django.core.mail import EmailMultiAlternatives
+            from django.template import Context
+            from django.template.loader import render_to_string
+            leave_applied_by = request.user.email
+            subject = "Trellissoft"
+            content = { 'user':user,
+                'startdate': request.POST['startdate'], 'enddate': request.POST['enddate'],
+                'leavetype': request.POST['leavetype'], 'reason': request.POST['reason']
+            }
+            #to = request.POST.get('email')
+            #to=["tejusbunny@gmail.com"]
+            html_body = get_template('accounts/email.html').render(content)
+            bod = ""
+            sent_by = "tejusgowda95@gmail.com"
+            leave_applied_by = request.user.email
+            msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
+                                         to=[leave_applied_by], body=bod)
+            msg.attach_alternative(html_body, "text/html")
+            msg.send()
+            print("Mail sent successfully")
             return redirect('view_my_leave_table')
-        messages.error(request,'Failed to request a leave. Please check the dates')
+        messages.error(request, 'Failed to request a leave. Please check the dates')
         return redirect('applyleave')
     else:
         dataset = dict()
