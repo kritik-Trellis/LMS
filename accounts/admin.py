@@ -5,6 +5,7 @@ from .manager import *
 admin.site.register(Leave)
 admin.site.register(Role)
 admin.site.register(Department)
+admin.site.register(MailingGroup)
 # admin.site.register(Nationality)
 admin.site.register(Religion)
 admin.site.register(Employee)

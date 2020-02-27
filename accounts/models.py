@@ -539,6 +539,9 @@ class Employee(models.Model):
     # email_id = models.EmailField(_("Email ID"), max_length=254)
     # reporting_to = models.ForeignKey(Employee,on_delete=models.SET_NULL)
 
+    reporting_to = models.ForeignKey('self', related_name='subordinates', blank=True, null=True, help_text='Reporting To',on_delete=models.SET_NULL)
+
+
     # COMPANY DATA
     department =  models.ForeignKey(Department,verbose_name =_('Department'),on_delete=models.SET_NULL,null=True,default=None)
     role =  models.ForeignKey(Role,verbose_name =_('Role'),on_delete=models.SET_NULL,null=True,default=None)
@@ -672,8 +675,13 @@ class Employee(models.Model):
         # print(self.employeeid)
 
 
+class MailingGroup(models.Model):
+    group_name = models.CharField(_('Group Name'),max_length=30,blank=False,null=False)
 
+    group_mail = models.EmailField(_('Email'),max_length=255,default=None,)
 
+    is_active = models.BooleanField(_("Is Active"),default=False)
 
-
+    def __str__(self):
+        return self.group_name
 
