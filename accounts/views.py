@@ -130,11 +130,11 @@ def applyleave(request):
             html_body = get_template('accounts/email.html').render(content)
             bod = ""
             sent_by = "tejusgowda95@gmail.com"
-            # manage = Employee.objects.select_related().get(id=request.user.id).email
+            manage = Employee.objects.select_related().get(id=request.user.id).email
             leave_applied_by = request.user.email
             print("----", request.user)
             msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
-                                         to=[leave_applied_by], body=bod)
+                                         to=[leave_applied_by, manage], body=bod)
             print("sent to" + leave_applied_by)
             msg.attach_alternative(html_body, "text/html")
             msg.send()
