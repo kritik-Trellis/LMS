@@ -7,27 +7,30 @@
 </head>
 <body>
 <section>
-  <h1 align="center">TrellisSoft</h1>
-  <h2 align="center">Employee Leave Details</h2>
-<table class="table" border=2 align="center">
+<h2>LEAVE REQUEST</h2>
+<h5>-------------------------------------------------------------------------------------------------------------------------------------------------------------</h5>
+<h3>Reason : {{ reason}}</h3>
+    <h4>Hi, {{ fname }} {{ lname }} has applied leave from  <u>{{ startdate }}</u>  to  <u>{{ enddate }}</u> for the reasons mentioned above.</h4>
+<P><h4>Regards,</h4>
+<h5> TrellisSoft HRD <br>TrellisSoft Engineering Services Pvt. Ltd,</h5></p>
+<table class="table" border=1>
   <thead class="thead-dark">
-   <th><h3>Employee Name</h3></th>
-    <th><h3>Start Date</h3></th>
-    <th><h3>End Date</h3></th>
-    <th><h3>Leave Type</h3></th>
-      <th><h3>Reason</h3></th>
+   <th>Employee Name</th>
+    <th>Start Date</th>
+    <th>End Date</h5></th>
+    <th>Leave Type</th>
      </tr>
     </thead>
   <tbody>
     <tr>
-    <td align="center">{{ user }}</td>
+    <td align="center">{{ fname }} {{ lname }}</td>
     <td align="center">{{ startdate }}</td>
     <td align="center">{{ enddate }}</td>
     <td align="center">{{ leavetype }}</td>
-    <td align="center">{{ reason }}</td>
     </tr>
     </tbody>
 </table>
+    <h4>Please <a href="http://localhost:8000/account/login/">click here</a> to login and check the leave details.</h4>
 </section>
 </body>
 </html>
