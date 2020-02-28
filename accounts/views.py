@@ -147,7 +147,7 @@ def applyleave(request):
     else:
         dataset = dict()
         form = LeaveCreationForm()
-        employee = Employee.objects.filter(user=request.user).first()
+        employee= Employee.objects.filter(user = request.user).first()
         dataset['form'] = form
         dataset['title'] = 'Apply for Leave'
         context = {'form': form,
@@ -251,6 +251,7 @@ def unapprove_leave(request, id):
     return redirect('leaves_list_mh')  # redirect to unapproved list
 
 
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['manager', 'hr'])
 def unreject_leave(request, id):
@@ -260,3 +261,38 @@ def unreject_leave(request, id):
     leave.save()
     # messages.success(request,'Leave is now in pending list ',extra_tags = 'alert alert-success alert-dismissible show')
     return redirect('leaves_list_mh')
+
+
+@login_required(login_url='login')
+def edit_profile(request,id):
+    obj= get_object_or_404(Employee,id=id)
+    # if request.method=='POST':
+    #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
+    #
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('/account/manager')
+    #
+    #
+    # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
+    # print(form)
+    # context={'form':form}
+    # return render(request,'accounts/edit_profile.html',context)
+
+    form = EditProfileForm(request.POST or None, instance= obj)
+    context= {'form': form}
+
+    if form.is_valid():
+        obj= form.save(commit= False)
+
+        obj.save()
+
+        context= {'form': form}
+
+        return redirect('/account/manager')
+
+    else:
+        context= {'form': form,
+                   'error': 'The form was not updated successfully. Please enter in a title and content'}
+        return render(request,'accounts/edit_profile.html',context)
+
