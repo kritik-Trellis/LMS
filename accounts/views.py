@@ -17,6 +17,7 @@ from .manager import *
 from django.contrib.auth.models import User
 from .forms import *
 from .decorators import *
+from django.template.loader import get_template
 
 def home(request):
     return render(request,'accounts/home.html')
@@ -63,8 +64,13 @@ def manager(request):
 
 @unauthorized_user
 def login_(request):
+
+    form = loginUserForm()
+    if request.method=="POST":
+
     # form = loginUserForm()
     if request.method == "POST":
+
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
