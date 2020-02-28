@@ -1,8 +1,9 @@
 from django.forms import ModelForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Leave
+from .models import *
+from django.forms import ModelForm
 import datetime
 
 class createUserForm(UserCreationForm):
@@ -41,3 +42,21 @@ class LeaveCreationForm(ModelForm):
 
 		return enddate
 
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model= Employee
+        fields=(
+        'firstname',
+        'lastname',
+        'email',
+        'tel',
+        'residence',
+        'address',
+        'reporting_to',
+        'department',
+        'role',
+
+
+        )
