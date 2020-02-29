@@ -47,7 +47,7 @@
 
 		<section class="hero-section">
 			<div class="container-fluid text-center">
-				<div class="profile_image"><img src="{{ employee.image.url }}" alt=""><div>
+				{% comment %} <div class="profile_image"><img src="{{ employee.image.url }}" alt=""><div> {% endcomment %}
 				<div class="hero-text">
 					<h2 style="font-size:45px;">{{ employee }}</h2>
 					<p style="font-size:30px;">{{ employee.bio }}</p>
@@ -55,7 +55,7 @@
 				<div class="social-links">
                     <a href="">LeaveCalender</a>
 					<a href="">About</a>
-					<a href="{% url 'editform' employee.id %}">EditProfile</a>
+					{% comment %} <a href="{% url 'editform' employee.id %}">EditProfile</a> {% endcomment %}
 				</div>
 			</div>
 		</section>

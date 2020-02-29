@@ -103,13 +103,35 @@ def applyleave(request):
             print(request.POST['startdate'])
             print(request.POST['enddate'])
             # messages.success(request,"Submitted Successfully! Check <a href=\"{% url 'view_my_leave_table' %}\">STATUS</a>.")
+
+
+            from django.core.mail import EmailMultiAlternatives
+            from django.template import Context
+            from django.template.loader import render_to_string
+            leave_applied_by = request.user.email
+            subject = "Trellissoft"
+            content = { 'user':user,
+                'startdate': request.POST['startdate'], 'enddate': request.POST['enddate'],
+                'leavetype': request.POST['leavetype'], 'reason': request.POST['reason']
+            }
+            #to = request.POST.get('email')
+            #to=["tejusbunny@gmail.com"]
+            html_body = get_template('accounts/email.html').render(content)
+            bod = ""
+            sent_by = "tejusgowda95@gmail.com"
+            leave_applied_by = request.user.email
+            msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
+                                         to=[leave_applied_by], body=bod)
+            msg.attach_alternative(html_body, "text/html")
+            msg.send()
+            print("Mail sent successfully")
             return redirect('view_my_leave_table')
-        messages.error(request,'Failed to request a leave. Please check the dates')
+        messages.error(request, 'Failed to request a leave. Please check the dates')
         return redirect('applyleave')
     else:
         dataset = dict()
         form = LeaveCreationForm()
-        employee= Employee.objects.filter(user = request.user).first() 
+        employee= Employee.objects.filter(user = request.user).first()
         dataset['form'] = form
         dataset['title'] = 'Apply for Leave'
         context = {'form':form,
@@ -283,3 +305,36 @@ def unreject_leave(request,id):
 # 	dataset['form'] = form
 # 	dataset['title'] = 'edit - {0}'.format(employee.get_full_name)
 # 	return render(request,'accounts/editform.html',dataset)
+
+@login_required(login_url='login')
+def edit_profile(request,id):
+    obj= get_object_or_404(Employee,id=id)
+    # if request.method=='POST':
+    #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
+    #
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('/account/manager')
+    #
+    #
+    # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
+    # print(form)
+    # context={'form':form}
+    # return render(request,'accounts/edit_profile.html',context)
+
+    form = EditProfileForm(request.POST or None, instance= obj)
+    context= {'form': form}
+
+    if form.is_valid():
+        obj= form.save(commit= False)
+
+        obj.save()
+
+        context= {'form': form}
+
+        return redirect('user')
+
+
+    context= {'form': form,
+                'error': 'The form was not updated successfully. Please enter in a title and content'}
+    return render(request,'accounts/edit_profile.html',context)

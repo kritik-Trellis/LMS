@@ -178,7 +178,7 @@ class Department(models.Model):
         verbose_name = _('Department')
         verbose_name_plural = _('Departments')
         ordering = ['name','created']
-    
+
     def __str__(self):
         return self.name
 
@@ -212,7 +212,7 @@ class Religion(models.Model):
 
     created = models.DateTimeField(verbose_name=_('Created'),auto_now_add=True)
     updated = models.DateTimeField(verbose_name=_('Updated'),auto_now=True)
-    
+
     class Meta:
         verbose_name = _('Religion')
         verbose_name_plural = _('Religions')
@@ -380,7 +380,7 @@ class Relationship(models.Model):
     nextofkin = models.CharField(_('Next of Kin'),max_length=255,blank=False,null=True,help_text='fullname of next of kin')
     contact = PhoneNumberField(verbose_name='Next of Kin Phone Number (Example +233240000000)',null=True,blank=True,help_text='Phone Number of Next of Kin')
     relationship = models.CharField(_('Relationship with Next of Person'),help_text='Who is this person to you ?',max_length=15,choices=NEXTOFKIN_RELATIONSHIP,blank=False,null=True)
-    
+
     # close recent
 
     father = models.CharField(_('Father\'s Name'),max_length=255,blank=True,null=True)
@@ -528,8 +528,8 @@ class Employee(models.Model):
     region = models.CharField(_('Region'),help_text='what region of the country(Ghana) are you from ?',max_length=20,default=GREATER,choices=GHANA_REGIONS,blank=False,null=True)
     residence = models.CharField(_('Current Residence'),max_length=125,null=False,blank=False)
     address = models.CharField(_('Address'),help_text='address of current residence',max_length=125,null=True,blank=True)
-    
-    education = models.CharField(_('Education'),help_text='highest educational standard ie. your last level of schooling',max_length=20,default=SENIORHIGH,choices=EDUCATIONAL_LEVEL,blank=False,null=True)
+
+    education = models.CharField(_('Education'),help_text='highest educational standard ie. your last level of schooling',max_length=40,default=SENIORHIGH,choices=EDUCATIONAL_LEVEL,blank=False,null=True)
     lastwork = models.CharField(_('Last Place of Work'),help_text='where was the last place you worked ?',max_length=125,null=True,blank=True)
     position = models.CharField(_('Position Held'),help_text='what position where you in your last place of work ?',max_length=255,null=True,blank=True)
     # ssnitnumber = models.CharField(_('SSNIT Number'),max_length=30,null=True,blank=True)
@@ -553,7 +553,7 @@ class Employee(models.Model):
     #app related
     is_blocked = models.BooleanField(_('Is Blocked'),help_text='button to toggle employee block and unblock',default=False)
     is_deleted = models.BooleanField(_('Is Deleted'),help_text='button to toggle employee deleted and undelete',default=False)
- 
+
     created = models.DateTimeField(verbose_name=_('Created'),auto_now_add=True,null=True)
     updated = models.DateTimeField(verbose_name=_('Updated'),auto_now=True,null=True)
 
@@ -561,8 +561,8 @@ class Employee(models.Model):
     #PLUG MANAGERS
     objects = EmployeeManager()
 
-    
-    
+
+
     class Meta:
         verbose_name = _('Employee')
         verbose_name_plural = _('Employees')
@@ -573,7 +573,7 @@ class Employee(models.Model):
     def __str__(self):
         return self.get_full_name
 
-    
+
 
     @property
     def get_full_name(self):
@@ -663,7 +663,7 @@ class Employee(models.Model):
 
     def save(self,*args,**kwargs):
         '''
-        overriding the save method - for every instance that calls the save method 
+        overriding the save method - for every instance that calls the save method
         perform this action on its employee_id
         added : March, 03 2019 - 11:08 PM
 
@@ -684,4 +684,3 @@ class MailingGroup(models.Model):
 
     def __str__(self):
         return self.group_name
-
