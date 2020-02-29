@@ -22,7 +22,8 @@ urlpatterns = [
     path('login/',views.login_,name="login"),
     path('register/',views.register,name="register"),
     path('logout/',views.logout_,name="logout"),
-    path('manager/<int:id>/edit_profile/',views.edit_profile,name='edit_profile')
+    path('manager/<int:id>/edit_profile/',views.edit_profile,name='edit_profile'),
+    path('user/<int:id>/edit_profile/',views.edit_profile,name='edit_profile')
     # path('email/', views.email, name="email"),
     # path('sendmail/', views.sendmail, name="sendmail"),
 

@@ -63,8 +63,13 @@ WSGI_APPLICATION = 'lms.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'sql_server.pyodbc',
+<<<<<<< HEAD
         'NAME': 'test3',
         'HOST': '192.168.0.160',
+=======
+        'NAME': 'LMS',
+        'HOST': '192.168.0.108',
+>>>>>>> 021f6c86754bdc8f9e5159b5cb69c1edcf8978b4
         'USER': 'sa',
         'PASSWORD' : '1mj16cs105',
         'PORT' : '1433',
