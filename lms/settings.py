@@ -63,13 +63,16 @@ WSGI_APPLICATION = 'lms.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'sql_server.pyodbc',
+
+        'NAME': 'LMS',
+        'HOST': '192.168.0.108',
         'NAME': 'test3',
         'HOST': '192.168.0.160',
         'USER': 'sa',
-        'PASSWORD' : '1mj16cs105',
+        'PASSWORD' : 'kritik123',
         'PORT' : '1433',
         'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
+            'driver': 'ODBC Driver 13 for SQL Server',
             'host_is_server':True,
             'unicode_results':True,
         }
