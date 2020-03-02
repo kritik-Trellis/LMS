@@ -68,9 +68,6 @@ def login_(request):
     form = loginUserForm()
     if request.method=="POST":
 
-    # form = loginUserForm()
-    if request.method == "POST":
-
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -138,10 +135,11 @@ def applyleave(request):
             sent_by = "tejusgowda95@gmail.com"
             manage = Employee.objects.select_related().get(id=request.user.id).email
             leave_applied_by = request.user.email
+            ## hr group logic pending
             print("----", request.user)
             msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
                                          to=[leave_applied_by, manage], body=bod)
-            print("sent to" + leave_applied_by)
+            print("Sent to" + leave_applied_by)
             msg.attach_alternative(html_body, "text/html")
             msg.send()
             print("Mail sent successfully")
@@ -268,116 +266,108 @@ def unreject_leave(request, id):
     # messages.success(request,'Leave is now in pending list ',extra_tags = 'alert alert-success alert-dismissible show')
     return redirect('leaves_list_mh')
 
-# @login_required(login_url='login')
-# def editform(request,id):
-# 	employee = get_object_or_404(Employee, id = id)
-# 	if request.method == 'POST':
-# 		form = EmployeeCreateForm(request.POST or None,request.FILES or None,instance = employee)
-# 		if form.is_valid():
-# 			instance = form.save(commit = False)
-
-# 			user = request.POST.get('user')
-# 			assigned_user = User.objects.get(id = user)
-
-# 			instance.user = assigned_user
-
-# 			instance.title = request.POST.get('title')
-# 			instance.image = request.FILES.get('image')
-# 			instance.firstname = request.POST.get('firstname')
-# 			instance.lastname = request.POST.get('lastname')
-# 			instance.othername = request.POST.get('othername')
-# 			instance.sex = request.POST.get('sex')
-# 			instance.bio = request.POST.get('bio')
-# 			instance.birthday = request.POST.get('birthday')
-
-# 			religion_id = request.POST.get('religion')
-# 			religion = Religion.objects.get(id = religion_id)
-# 			instance.religion = religion
-
-# 			nationality_id = request.POST.get('nationality')
-# 			nationality = Nationality.objects.get(id = nationality_id)
-# 			instance.nationality = nationality
-
-# 			department_id = request.POST.get('department')
-# 			department = Department.objects.get(id = department_id)
-# 			instance.department = department
-
-
-# 			instance.hometown = request.POST.get('hometown')
-# 			instance.region = request.POST.get('region')
-# 			instance.residence = request.POST.get('residence')
-# 			instance.address = request.POST.get('address')
-# 			instance.education = request.POST.get('education')
-# 			instance.lastwork = request.POST.get('lastwork')
-# 			instance.position = request.POST.get('position')
-# 			instance.ssnitnumber = request.POST.get('ssnitnumber')
-# 			instance.tinnumber = request.POST.get('tinnumber')
-
-# 			role = request.POST.get('role')
-# 			role_instance = Role.objects.get(id = role)
-# 			instance.role = role_instance
-
-# 			instance.startdate = request.POST.get('startdate')
-# 			instance.employeetype = request.POST.get('employeetype')
-# 			instance.employeeid = request.POST.get('employeeid')
-# 			instance.dateissued = request.POST.get('dateissued')
-
-# 			# now = datetime.datetime.now()
-# 			# instance.created = now
-# 			# instance.updated = now
-
-# 			instance.save()
-# 			# messages.success(request,'Account Updated Successfully !!!',extra_tags = 'alert alert-success alert-dismissible show')
-# 			return redirect('user')
-
-# 		else:
-
-# 			# messages.error(request,'Error Updating account',extra_tags = 'alert alert-warning alert-dismissible show')
-# 			return HttpResponse("Form data not valid")
-
-# 	dataset = dict()
-# 	form = EmployeeCreateForm(request.POST or None,request.FILES or None,instance = employee)
-# 	dataset['form'] = form
-# 	dataset['title'] = 'edit - {0}'.format(employee.get_full_name)
-# 	return render(request,'accounts/editform.html',dataset)
-
 @login_required(login_url='login')
 def edit_profile(request,id):
-    obj= get_object_or_404(Employee,id=id)
-    # if request.method=='POST':
-    #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('/account/manager')
-    #
-    #
-    # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
-    # print(form)
-    # context={'form':form}
-    # return render(request,'accounts/edit_profile.html',context)
+	employee = get_object_or_404(Employee, id = id)
+	if request.method == 'POST':
+		form = EmployeeCreateForm(request.POST or None,request.FILES or None,instance = employee)
+		if form.is_valid():
+			instance = form.save(commit = False)
 
-    form = EditProfileForm(request.POST or None, instance= obj)
-    context= {'form': form}
+			user = request.POST.get('user')
+			assigned_user = User.objects.get(id = user)
 
-    if form.is_valid():
-        obj= form.save(commit= False)
+			instance.user = assigned_user
 
-        obj.save()
+			instance.title = request.POST.get('title')
+			instance.image = request.FILES.get('image')
+			instance.firstname = request.POST.get('firstname')
+			instance.lastname = request.POST.get('lastname')
+			instance.othername = request.POST.get('othername')
+			instance.sex = request.POST.get('sex')
+			instance.bio = request.POST.get('bio')
+			instance.birthday = request.POST.get('birthday')
 
-        context= {'form': form}
+			religion_id = request.POST.get('religion')
+			religion = Religion.objects.get(id = religion_id)
+			instance.religion = religion
 
-        return redirect('user')
+			nationality_id = request.POST.get('nationality')
+			nationality = Nationality.objects.get(id = nationality_id)
+			instance.nationality = nationality
 
-<<<<<<< HEAD
+			department_id = request.POST.get('department')
+			department = Department.objects.get(id = department_id)
+			instance.department = department
 
-    context= {'form': form,
-                'error': 'The form was not updated successfully. Please enter in a title and content'}
-    return render(request,'accounts/edit_profile.html',context)
-=======
-    else:
-        context= {'form': form,
-                   'error': 'The form was not updated successfully. Please enter in a title and content'}
-        return render(request,'accounts/edit_profile.html',context)
 
->>>>>>> 021f6c86754bdc8f9e5159b5cb69c1edcf8978b4
+			instance.hometown = request.POST.get('hometown')
+			instance.region = request.POST.get('region')
+			instance.residence = request.POST.get('residence')
+			instance.address = request.POST.get('address')
+			instance.education = request.POST.get('education')
+			instance.lastwork = request.POST.get('lastwork')
+			instance.position = request.POST.get('position')
+			instance.ssnitnumber = request.POST.get('ssnitnumber')
+			instance.tinnumber = request.POST.get('tinnumber')
+
+			role = request.POST.get('role')
+			role_instance = Role.objects.get(id = role)
+			instance.role = role_instance
+
+			instance.startdate = request.POST.get('startdate')
+			instance.employeetype = request.POST.get('employeetype')
+			instance.employeeid = request.POST.get('employeeid')
+			instance.dateissued = request.POST.get('dateissued')
+
+			# now = datetime.datetime.now()
+			# instance.created = now
+			# instance.updated = now
+
+			instance.save()
+			# messages.success(request,'Account Updated Successfully !!!',extra_tags = 'alert alert-success alert-dismissible show')
+			return redirect('user')
+
+		else:
+
+			# messages.error(request,'Error Updating account',extra_tags = 'alert alert-warning alert-dismissible show')
+			return HttpResponse("Form data not valid")
+
+	dataset = dict()
+	form = EmployeeCreateForm(request.POST or None,request.FILES or None,instance = employee)
+	dataset['form'] = form
+	dataset['title'] = 'edit - {0}'.format(employee.get_full_name)
+	return render(request,'accounts/edit_profile.html',dataset)
+
+# @login_required(login_url='login')
+# def edit_profile(request,id):
+#     obj= get_object_or_404(Employee,id=id)
+#     # if request.method=='POST':
+#     #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
+#     #
+#     #     if form.is_valid():
+#     #         form.save()
+#     #         return redirect('/account/manager')
+#     #
+#     #
+#     # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
+#     # print(form)
+#     # context={'form':form}
+#     # return render(request,'accounts/edit_profile.html',context)
+
+#     form = EditProfileForm(request.POST or None, instance= obj)
+#     context= {'form': form}
+
+#     if form.is_valid():
+#         obj= form.save(commit= False)
+
+#         obj.save()
+
+#         context= {'form': form}
+
+#         return redirect('user')
+
+
+#     context= {'form': form,
+#                 'error': 'The form was not updated successfully. Please enter in a title and content'}
+#     return render(request,'accounts/edit_profile.html',context)
