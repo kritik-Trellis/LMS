@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.contrib.auth.views import password_reset_done
+from django.contrib.auth.views import PasswordResetView
 
 urlpatterns = [
     path('', views.home,name="home"),
@@ -23,7 +25,14 @@ urlpatterns = [
     path('register/',views.register,name="register"),
     path('logout/',views.logout_,name="logout"),
     path('manager/<int:id>/edit_profile/',views.edit_profile,name='edit_profile'),
-    path('user/<int:id>/edit_profile/',views.edit_profile,name='edit_profile')
+    path('user/<int:id>/edit_profile/',views.edit_profile,name='edit_profile'),
+        # path('reset-password/',password_reset,name='reset_password'),
+        # path('reset-password/done/',password_reset_done,name='password_reset_done'),
+    path(
+        'reset-password/',
+        PasswordResetView.as_view(),
+        name='password_reset'
+    ),
     # path('email/', views.email, name="email"),
     # path('sendmail/', views.sendmail, name="sendmail"),
 

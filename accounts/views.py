@@ -375,15 +375,8 @@ def edit_profile(request,id):
 
         return redirect('user')
 
-<<<<<<< HEAD
-
-    context= {'form': form,
-                'error': 'The form was not updated successfully. Please enter in a title and content'}
-    return render(request,'accounts/edit_profile.html',context)
-=======
     else:
         context= {'form': form,
                    'error': 'The form was not updated successfully. Please enter in a title and content'}
         return render(request,'accounts/edit_profile.html',context)
 
->>>>>>> 021f6c86754bdc8f9e5159b5cb69c1edcf8978b4
