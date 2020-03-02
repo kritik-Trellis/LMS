@@ -134,11 +134,14 @@ def applyleave(request):
             bod = ""
             sent_by = "tejusgowda95@gmail.com"
             manage = Employee.objects.select_related().get(id=request.user.id).email
+            print("=================================================")
+            print(manage)
+            print("=================================================")
             leave_applied_by = request.user.email
             ## hr group logic pending
             print("----", request.user)
             msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
-                                         to=[leave_applied_by, manage], body=bod)
+                                         to=[leave_applied_by], body=bod)
             print("Sent to" + leave_applied_by)
             msg.attach_alternative(html_body, "text/html")
             msg.send()

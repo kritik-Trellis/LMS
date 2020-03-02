@@ -80,7 +80,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'tejusgowda95@gmail.com'
-EMAIL_HOST_PASSWORD = '9900390345'
+EMAIL_HOST_PASSWORD = 'tj@9900390'
 
 
 
