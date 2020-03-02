@@ -69,19 +69,19 @@ def login_(request):
     if request.method=="POST":
 
     # form = loginUserForm()
-    if request.method == "POST":
+        if request.method == "POST":    
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('dashboard')
-        else:
-            messages.info(request, message="Invalid credentials!")
-            return render(request, 'accounts/login.html')
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('dashboard')
+            else:
+                messages.info(request, message="Invalid credentials!")
+                return render(request, 'accounts/login.html')
     context = {}
-    return render(request, 'accounts/login.html', context)
+    return render(request, 'accounts/login.html',context)
 
 
 @unauthorized_user
@@ -90,10 +90,16 @@ def register(request):
     form = createUserForm()
     if request.method == "POST":
         form = createUserForm(request.POST)
+        # pass1=request.POST['password1']
+        # pass2=request.POST['password2']
+        # if pass1!=pass2:
+
         if form.is_valid():
             form.save()
             return redirect('login')
         else:
+            # print(form.ValidationError)
+            print(type(form.errors))
             messages.info(request, message="Invalid credentials!")
     context = {'form': form}
     return render(request, 'accounts/register.html', context)
