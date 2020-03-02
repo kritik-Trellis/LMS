@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 from django.contrib.auth.models import User
 from django import forms
+
 from .models import Leave, Employee
 from .models import *
 from django.forms import ModelForm
@@ -43,21 +44,13 @@ class LeaveCreationForm(ModelForm):
 
 		return enddate
 
-# <<<<<<< HEAD
-# class EditProfileForm(forms.ModelForm):
-# 	employeeid = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'please enter 5 characters without RGL or slashes eg. A0025'}))
-# 	image = forms.ImageField(widget=forms.FileInput(attrs={'onchange':'previewImage(this);'}))
-# 	class Meta:
-# 		model = Employee
-# 		exclude = ['is_blocked','is_deleted','created','updated']
-# 		widgets = {
-# 				'bio':forms.Textarea(attrs={'cols':5,'rows':5})
-# 		}
-# =======
 
-
-class EditProfileForm(forms.ModelForm):
-    class Meta:
-        model= Employee
-        exclude=['updated','created','is_deleted','is_blocked']
-
+class EmployeeCreateForm(forms.ModelForm):
+	# employeeid = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'please enter 5 characters without RGL or slashes eg. A0025'}))
+	image = forms.ImageField(widget=forms.FileInput(attrs={'onchange':'previewImage(this);'}))
+	class Meta:
+		model = Employee
+		exclude = ['is_blocked','is_deleted','created','updated']
+		widgets = {
+				'bio':forms.Textarea(attrs={'cols':5,'rows':5})
+		}

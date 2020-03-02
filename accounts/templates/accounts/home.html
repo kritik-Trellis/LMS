@@ -82,17 +82,18 @@
         </section>
     </nav>
     <div class="message">
-        <h1 id="a">Hello,Folks..!!!!!!!</h1>
+        <h1 id="a">Leave Simplified.</h1>
+            {% comment %} <h5>A portal for all the empoloyee to view and apply leaves</h5> {% endcomment %}
         <p class="greet" id="lblGreetings"></p>
         <p id="quote"></p>
     </div>
     <div class="footer">
         <p>All rights reserved. Copyright 2020 © TrellisSoft Inc.</p>
         <div class="icons">
-            <p> <a href="https://www.facebook.com/TrellisSoftInc/"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-            <a href="https://www.instagram.com/trellissoft/"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-            <a href="https://www.linkedin.com/company/trellissoft/"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
-            <a href="https://twitter.com/TrellisSoftInc"><i class="fa fa-twitter" aria-hidden="true"></i></a></p>
+            <p> <a href="https://www.facebook.com/TrellisSoftInc/" ><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+            <a href="https://www.instagram.com/trellissoft/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://www.linkedin.com/company/trellissoft/" target="_blank"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+            <a href="https://twitter.com/TrellisSoftInc" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></p>
         </div>
     </div>
 </body>
@@ -138,7 +139,7 @@
         greet = 'Good Evening';
         random = evening[Math.floor(Math.random()*evening.length)];
     }
-    document.getElementById('lblGreetings').innerHTML ='<b>' + greet + '</b>........, ';
+    document.getElementById('lblGreetings').innerHTML ='<b>' + greet;
     document.getElementById('quote').innerHTML ='<b>' + random + '</b> ';
 
 </script>

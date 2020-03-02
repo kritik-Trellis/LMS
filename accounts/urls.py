@@ -33,6 +33,7 @@ urlpatterns = [
         PasswordResetView.as_view(),
         name='password_reset'
     ),
+    path('user/<int:id>/edit_profile/',views.edit_profile,name='edit_profile')
     # path('email/', views.email, name="email"),
     # path('sendmail/', views.sendmail, name="sendmail"),
 

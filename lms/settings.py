@@ -63,8 +63,11 @@ WSGI_APPLICATION = 'lms.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'sql_server.pyodbc',
+
         'NAME': 'LMS',
         'HOST': '192.168.0.108',
+        'NAME': 'test3',
+        'HOST': '192.168.0.160',
         'USER': 'sa',
         'PASSWORD' : 'kritik123',
         'PORT' : '1433',
@@ -80,7 +83,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'tejusgowda95@gmail.com'
-EMAIL_HOST_PASSWORD = '9900390345'
+EMAIL_HOST_PASSWORD = 'tj@9900390'
 
 
 

@@ -8,6 +8,10 @@ table {
     text-transform: capitalize;
 }
 
+section {
+    margin: 0% 5%;
+}
+
 tr,
 th {
     border: 1px solid black;
