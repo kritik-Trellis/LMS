@@ -291,36 +291,36 @@ def unreject_leave(request, id):
 @login_required(login_url='login')
 def edit_profile(request,id):
 
-    obj= get_object_or_404(Employee,id=id)
-    # if request.method=='POST':
-    #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('/account/manager')
-    #
-    #
-    # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
-    # print(form)
-    # context={'form':form}
-    # return render(request,'accounts/edit_profile.html',context)
+    # obj= get_object_or_404(Employee,id=id)
+    # # if request.method=='POST':
+    # #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
+    # #
+    # #     if form.is_valid():
+    # #         form.save()
+    # #         return redirect('/account/manager')
+    # #
+    # #
+    # # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
+    # # print(form)
+    # # context={'form':form}
+    # # return render(request,'accounts/edit_profile.html',context)
 
-    form = EditProfileForm(request.POST or None, instance= obj)
-    context= {'form': form}
+    # form = EditProfileForm(request.POST or None, instance= obj)
+    # context= {'form': form}
 
-    if form.is_valid():
-        obj= form.save(commit= False)
+    # if form.is_valid():
+    #     obj= form.save(commit= False)
 
-        obj.save()
+    #     obj.save()
 
-        context= {'form': form}
+    #     context= {'form': form}
 
-        return redirect('user')
+    #     return redirect('user')
 
-    else:
-        context= {'form': form,
-                   'error': 'The form was not updated successfully. Please enter in a title and content'}
-        return render(request,'accounts/edit_profile.html',context)
+    # else:
+    #     context= {'form': form,
+    #                'error': 'The form was not updated successfully. Please enter in a title and content'}
+    #     return render(request,'accounts/edit_profile.html',context)
 
 	employee = get_object_or_404(Employee, id = id)
 	if request.method == 'POST':
