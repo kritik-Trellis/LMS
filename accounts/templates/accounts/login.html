@@ -112,10 +112,12 @@
               {% csrf_token %}
             <!--<p>Email</p>-->
             <input type="text" name="username" placeholder="Email" required/>
+                        {{form.errors.username}}                    <!-- <p>Email</p> -->
+            
             <!-- <p>Password</p> -->
             <input type="password" name="password" placeholder="Password"  title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
             <input type="submit" name="submit" value="Login"/>
-            <p style="text-align: center;"><a href="forgot.html"><u>Forgot Password</u></a></p>
+            <p style="text-align: center;"><a href="{% url 'reset_password' %}"><u>Forgot Password</u></a></p>
             </form>
         </div>
         <div class="footer">

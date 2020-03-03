@@ -68,6 +68,19 @@ def login_(request):
     form = loginUserForm()
     if request.method=="POST":
 
+
+    # form = loginUserForm()
+        if request.method == "POST":    
+
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('dashboard')
+            else:
+                messages.info(request, message="Invalid credentials!")
+                return render(request, 'accounts/login.html')
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -78,7 +91,7 @@ def login_(request):
             messages.info(request, message="Invalid credentials!")
             return render(request, 'accounts/login.html')
     context = {}
-    return render(request, 'accounts/login.html', context)
+    return render(request, 'accounts/login.html',context)
 
 
 @unauthorized_user
@@ -87,10 +100,16 @@ def register(request):
     form = createUserForm()
     if request.method == "POST":
         form = createUserForm(request.POST)
+        # pass1=request.POST['password1']
+        # pass2=request.POST['password2']
+        # if pass1!=pass2:
+
         if form.is_valid():
             form.save()
             return redirect('login')
         else:
+            # print(form.ValidationError)
+            print(type(form.errors))
             messages.info(request, message="Invalid credentials!")
     context = {'form': form}
     return render(request, 'accounts/register.html', context)
@@ -277,6 +296,38 @@ def unreject_leave(request, id):
 
 @login_required(login_url='login')
 def edit_profile(request,id):
+
+    # obj= get_object_or_404(Employee,id=id)
+    # # if request.method=='POST':
+    # #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
+    # #
+    # #     if form.is_valid():
+    # #         form.save()
+    # #         return redirect('/account/manager')
+    # #
+    # #
+    # # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
+    # # print(form)
+    # # context={'form':form}
+    # # return render(request,'accounts/edit_profile.html',context)
+
+    # form = EditProfileForm(request.POST or None, instance= obj)
+    # context= {'form': form}
+
+    # if form.is_valid():
+    #     obj= form.save(commit= False)
+
+    #     obj.save()
+
+    #     context= {'form': form}
+
+    #     return redirect('user')
+
+    # else:
+    #     context= {'form': form,
+    #                'error': 'The form was not updated successfully. Please enter in a title and content'}
+    #     return render(request,'accounts/edit_profile.html',context)
+
 	employee = get_object_or_404(Employee, id = id)
 	if request.method == 'POST':
 		form = EmployeeCreateForm(request.POST or None,request.FILES or None,instance = employee)
@@ -380,3 +431,4 @@ def edit_profile(request,id):
 #     context= {'form': form,
 #                 'error': 'The form was not updated successfully. Please enter in a title and content'}
 #     return render(request,'accounts/edit_profile.html',context)
+
