@@ -23,7 +23,9 @@ LEAVE_TYPE = (
 (STUDY,'Study Leave'),
 )
 
-DAYS = 21
+DAYS_sick = 7
+DAYS_casual = 7
+DAYS_planned = 7
 
 
 class Leave(models.Model):
@@ -32,7 +34,9 @@ class Leave(models.Model):
 	enddate = models.DateField(verbose_name=_('End Date'),null=True,blank=False)
 	leavetype = models.CharField(choices=LEAVE_TYPE,max_length=25,default=SICK,null=True,blank=False)
 	reason = models.CharField(verbose_name=_('Reason for Leave'),max_length=255,help_text='add additional information for leave',null=False,blank=False,default='Unspecified Reason')
-	defaultdays = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS,null=True,blank=True)
+	defaultdays_sick = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS_sick,null=True,blank=True)
+	defaultdays_casual = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS_casual,null=True,blank=True)
+	defaultdays_planned = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS_planned,null=True,blank=True)
 
 
 	# hrcomments = models.ForeignKey('CommentLeave') #hide
@@ -522,10 +526,10 @@ class Employee(models.Model):
     tel = PhoneNumberField(default='+233240000000', null = False, blank=False, verbose_name='Phone Number (Example +233240000000)', help_text= 'Enter number with Country Code Eg. +233240000000')
     bio = models.CharField(_('Bio'),help_text='your biography,tell me something about yourself eg. i love working ...',max_length=255,default='',null=True,blank=True)
     birthday = models.DateField(_('Birthday'),blank=False,null=False)
-    religion = models.ForeignKey(Religion,verbose_name =_('Religion'),on_delete=models.SET_NULL,null=True,default=None)
-    nationality = models.ForeignKey(Nationality,verbose_name =_('Nationality'),on_delete=models.SET_NULL,null=True,default=None)
+    # religion = models.ForeignKey(Religion,verbose_name =_('Religion'),on_delete=models.SET_NULL,null=True,default=None)
+    # nationality = models.ForeignKey(Nationality,verbose_name =_('Nationality'),on_delete=models.SET_NULL,null=True,default=None)
     hometown = models.CharField(_('Hometown'),max_length=125,null=True,blank=True)
-    region = models.CharField(_('Region'),help_text='what region of the country(Ghana) are you from ?',max_length=20,default=GREATER,choices=GHANA_REGIONS,blank=False,null=True)
+    # region = models.CharField(_('Region'),help_text='what region of the country(Ghana) are you from ?',max_length=20,default=GREATER,choices=GHANA_REGIONS,blank=False,null=True)
     residence = models.CharField(_('Current Residence'),max_length=125,null=False,blank=False)
     address = models.CharField(_('Address'),help_text='address of current residence',max_length=125,null=True,blank=True)
 

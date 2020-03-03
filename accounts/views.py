@@ -107,10 +107,16 @@ def status(request):
 
 @login_required(login_url='login')
 def applyleave(request):
+    # leave = Leave(user=request.user)
     if request.method == 'POST':
         form = LeaveCreationForm(request.POST)
         if form.is_valid():
             # import pdb;pdb.set_trace()
+            # if request.POST['leavetype']=='PLANNED LEAVE':
+            #     if leave.leavedays <= default_days_planned and (leave.leavedays==2 or (leave.leavedays==5 and planned_bool==True)):
+            #         alow him to take leave
+            #         if leave.leavedays == 5:
+            #             plannedbool = False
             instance = form.save(commit=False)
             user = request.user
             instance.user = user
@@ -141,7 +147,7 @@ def applyleave(request):
             ## hr group logic pending
             print("----", request.user)
             msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
-                                         to=[leave_applied_by], body=bod)
+                                         to=[leave_applied_by, manage], body=bod)
             print("Sent to" + leave_applied_by)
             msg.attach_alternative(html_body, "text/html")
             msg.send()

@@ -49,6 +49,8 @@ class LeaveManager(models.Manager):
 		'''
 		return super().get_queryset().filter(startdate__year = datetime.date.today().year)
 
+	def current_month_leaves(self):
+		return super().get_queryset().filter(startdate__month = datetime.date.today().month)
 
 class EmployeeManager(models.Manager):
     def get_queryset(self):
