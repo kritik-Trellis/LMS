@@ -66,8 +66,6 @@ DATABASES = {
 
         'NAME': 'LMS',
         'HOST': '192.168.0.108',
-        'NAME': 'test3',
-        'HOST': '192.168.0.160',
         'USER': 'sa',
         'PASSWORD' : 'kritik123',
         'PORT' : '1433',
@@ -79,6 +77,7 @@ DATABASES = {
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
