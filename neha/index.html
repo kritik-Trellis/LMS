@@ -35,60 +35,48 @@
 </body>
 <script>
     var myDate = new Date();
-        var hrs = myDate.getHours();
-    
-        var greet;
-        var random;
-        var morning = [
-         "Each morning we are born again. What we do today is what matters most.",
-         "Give every day the chance to become the most beautiful day of your life.",
-         "A morning-glory at my window satisfies me more than the metaphysics of books.",
-         "Write it on your heart that every day is the best day in the year.",
-         "The breeze at dawn has secrets to tell you. Don’t go back to sleep."
-          ];
-        var afternoon = [
-         "The afternoon is not only the middle of the day it is the time to complete our essential task and go ahead in life",
-         "",
-         "As you climb the ladder of success, check occasionally to make sure it is leaning against the right wall.",
-         "Learning history is so easy but making history is so difficult. Make a history of yourself and make others to learn it!",
-         "The biggest motivation is your own thoughts, so think big and motivate yourself to win.",
-         "Your dream doesn’t have an expiration date. take a deep breath, and try again."
-          ];
-        var evening=[
-        "Beauty is a fact, and it can change with time. Something ugly in the morning can become beautiful in the evening.",
-         "The evening's the best part of the day. You've done your day's work. Now you can put your feet up and enjoy it",
-         "Every sunset brings the promise of a new dawn",
-         "Each morning sees some task begin, each evening sees it close.",
-         "In the evening Everything has a schedule, if you can find out what it is."
+    var hrs = myDate.getHours();
+
+    var greet;
+    var random;
+    var morning = [
+     "Each morning we are born again. What we do today is what matters most.",
+     "Give every day the chance to become the most beautiful day of your life.",
+     "A morning-glory at my window satisfies me more than the metaphysics of books.",
+     "Write it on your heart that every day is the best day in the year.",
+     "The breeze at dawn has secrets to tell you. Don’t go back to sleep."
+      ];
+    var afternoon = [
+     "The afternoon is not only the middle of the day it is the time to complete our essential task and go ahead in life",
+     "",
+     "A morning-glory at my window satisfies me more than the metaphysics of books.",
+     "Write it on your heart that every day is the best day in the year.",
+     "The breeze at dawn has secrets to tell you. Don’t go back to sleep."
+      ];
+    var evening=[
+    "The afternoon is not only the middle of the day it is the time to complete our essential task and go ahead in life",
+     "",
+     "A morning-glory at my window satisfies me more than the metaphysics of books.",
+     "Write it on your heart that every day is the best day in the year.",
+     "The breeze at dawn has secrets to tell you. Don’t go back to sleep."
+
     ]
-    var night=[
-        "Always end the day with a positive thought. No matter how hard things were, tomorrow’s a fresh opportunity to make it better.",
-        "Remember this: An ending is always the start of something new.",
-        "I dream of the day when each night will end with good night and not goodbye. That day will come soon.",
-        "The internet is closed for the night. Go to sleep, and get those great ideas percolating.",
-        "May you fall asleep in a comforting cloud of dreams that will define the purpose of tomorrow’s adventures.",
-    ]
-    
-    
-        if (hrs < 12){
-            greet = 'Good Morning';
-            random = morning[Math.floor(Math.random()*morning.length)];
-        }
-        else if (hrs >= 12 && hrs <= 17){
-            greet = 'Good Afternoon';
-            random = afternoon[Math.floor(Math.random()*afternoon.length)];
-        }
-        else if (hrs >= 17 && hrs <= 21){
-            greet = 'Good Evening';
-            random = evening[Math.floor(Math.random()*evening.length)];
-        }
-        else if (hrs >= 21 && hrs <= 24){
-            greet = 'Good Night';
-            random = night[Math.floor(Math.random()*night.length)];
-        }
-        document.getElementById('lblGreetings').innerHTML ='<b>' + greet + '</b>........, ';
-        document.getElementById('quote').innerHTML ='<b>' + random + '</b> ';
-        
+
+
+    if (hrs < 12){
+        greet = 'Good Morning';
+        random = morning[Math.floor(Math.random()*morning.length)];
+    }
+    else if (hrs >= 12 && hrs <= 17){
+        greet = 'Good Afternoon';
+        random = afternoon[Math.floor(Math.random()*afternoon.length)];
+    }
+    else if (hrs >= 17 && hrs <= 24){
+        greet = 'Good Evening';
+        random = evening[Math.floor(Math.random()*evening.length)];
+    }
+    document.getElementById('lblGreetings').innerHTML ='<b>' + greet + '</b>........, ';
+    document.getElementById('quote').innerHTML ='<b>' + random + '</b> ';
     
 </script> 
 </html>
