@@ -348,13 +348,13 @@ def edit_profile(request,id):
 			instance.bio = request.POST.get('bio')
 			instance.birthday = request.POST.get('birthday')
 
-			religion_id = request.POST.get('religion')
-			religion = Religion.objects.get(id = religion_id)
-			instance.religion = religion
+			# religion_id = request.POST.get('religion')
+			# religion = Religion.objects.get(id = religion_id)
+			# instance.religion = religion
 
-			nationality_id = request.POST.get('nationality')
-			nationality = Nationality.objects.get(id = nationality_id)
-			instance.nationality = nationality
+			# nationality_id = request.POST.get('nationality')
+			# nationality = Nationality.objects.get(id = nationality_id)
+			# instance.nationality = nationality
 
 			department_id = request.POST.get('department')
 			department = Department.objects.get(id = department_id)
@@ -368,8 +368,8 @@ def edit_profile(request,id):
 			instance.education = request.POST.get('education')
 			instance.lastwork = request.POST.get('lastwork')
 			instance.position = request.POST.get('position')
-			instance.ssnitnumber = request.POST.get('ssnitnumber')
-			instance.tinnumber = request.POST.get('tinnumber')
+			# instance.ssnitnumber = request.POST.get('ssnitnumber')
+			# instance.tinnumber = request.POST.get('tinnumber')
 
 			role = request.POST.get('role')
 			role_instance = Role.objects.get(id = role)
