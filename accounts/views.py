@@ -130,50 +130,157 @@ def applyleave(request):
     if request.method == 'POST':
         form = LeaveCreationForm(request.POST)
         if form.is_valid():
+            # leave = get_object_or_404(Leave, id=id)
+            print("INSIDE FOR IS VALID")
             # import pdb;pdb.set_trace()
-            # if request.POST['leavetype']=='PLANNED LEAVE':
-            #     if leave.leavedays <= default_days_planned and (leave.leavedays==2 or (leave.leavedays==5 and planned_bool==True)):
-            #         alow him to take leave
-            #         if leave.leavedays == 5:
-            #             plannedbool = False
-            instance = form.save(commit=False)
-            user = request.user
-            instance.user = user
-            instance.save()
-            print("LEAVE APPLIED SUCCESSFULLY!!!")
+            
+            # if request.POST['leavetype']=='planned':
+            #     print("INSIDE IF REQUEST METHOD HAS PLANNED LEAVE")
+            #     print()
+            #     if :
+            print("LEAVE TRANSFERRED SUCCESSFULLY!!!")
+
+            leave_type=request.POST['leavetype']
+            start_date=request.POST['startdate']
+            end_date=request.POST['enddate']
+
+            print(request.POST['leavetype'])
             print(request.POST['startdate'])
             print(request.POST['enddate'])
 
-            # messages.success(request,"Submitted Successfully! Check <a href=\"{% url 'view_my_leave_table' %}\">STATUS</a>.")
+            start_date_strptime = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date_strptime = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
 
-            #Email functionality------------------------------------------------
+            date=datetime.date
 
-            fname = User.objects.all().get(username=request.user).first_name
-            lname = User.objects.all().get(username=request.user).last_name
-            subject = "Leave Application | " + request.POST['leavetype'] + " | " + fname + " " + lname
-            content = {'fname': fname, 'lname': lname,
-                       'startdate': request.POST['startdate'], 'enddate': request.POST['enddate'],
-                       'leavetype': request.POST['leavetype'], 'reason': request.POST['reason']
-                       }
-            html_body = get_template('accounts/email.html').render(content)
-            bod = ""
-            sent_by = "tejusgowda95@gmail.com"
-            manage = Employee.objects.select_related().get(id=request.user.id).email
-            print("=================================================")
-            print(manage)
-            print("=================================================")
-            leave_applied_by = request.user.email
-            ## hr group logic pending
-            print("----", request.user)
-            msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
-                                         to=[leave_applied_by, manage], body=bod)
-            print("Sent to" + leave_applied_by)
-            msg.attach_alternative(html_body, "text/html")
-            msg.send()
-            print("Mail sent successfully")
-            #-----------------------------------------------------------------------------------------------
+            
+            print("DATE OBJECT FORMAT : ",date.today())
+            print("TYPE OF DATE OBJECT : ",type(date.today()))
+            print("START DATE STRIP TIME FORMAT : ",start_date_strptime)
+            print("TYPE OF DATE OBJECT : ",type(start_date_strptime))
+            
+            no_of_days= abs((date.today()-start_date_strptime))
+            print("NUMBER OF DAYS FROM CURRENT DATE APPLIED TO : ",no_of_days)
 
-            return redirect('view_my_leave_table')
+            total_days_applied=(end_date_strptime-start_date_strptime)
+            print("TOTAL DAYS APPLIED : ",total_days_applied)
+
+            # employee = Employee(user=request.user)
+            leave = Leave(user=request.user)
+            employee = Employee.objects.get(user=request.user)
+
+            if leave_type=="planned":
+                if no_of_days.days>=14:
+                    print("=========================================================")
+                    print("TOTAL DAYS APPLIED.DAYS + 1 : ",total_days_applied.days+1)
+                    print("=========================================================")
+                    # print("FORMAT FOR NUMBER OF DAYS INSIDE PLANNED CONDITION FOR 14 DAYS IS :",int(no_of_days[0]))
+                    if leave.defaultdays_planned >=1 and total_days_applied.days+1<=leave.defaultdays_planned:
+                        if total_days_applied.days+1 == 5:
+                            print("TYPE OF PLANNED_5_DAYS VARIBALE : ",type(employee.planned_5_days))
+                            print("VALUE OF PLANNED_5_DAYS VARIBALE : ",employee.planned_5_days)
+                            print("NAME OF THE EMPLOYEE IS : ",employee.firstname)
+                            if employee.planned_5_days == True:
+                                print("HELOWWWWWWWWWWWWWWWWWW WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+                                instance = form.save(commit=False)
+                                employee.update(planned_5_days=False)
+                                user = request.user
+                                instance.user = user
+                                instance.save()
+                            else:
+                                return HttpResponse("YOU ARE ELIGIBLE TO APPLY FOR 5 DAYS LEAVE, ONLY ONCE PER YEAR")
+                        
+                        elif total_days_applied.days+1 <= 2:
+                            instance = form.save(commit=False)
+                            user = request.user
+                            instance.user = user
+                            instance.save()
+                        else:
+                            return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 5 DAYS OR BETWEEN 3 TO 5")
+                    else:
+                        return HttpResponse("IN SUFFICIENT PLANNED LEAVE BALANCE")     
+                else:
+                    return HttpResponse("PLAN PRIOR TO 14 DAYS")               
+
+               
+            elif leave_type=="casual":
+                if no_of_days.days>=2:
+                    if leave.defaultdays_casual >=1 and total_days_applied.days+1<=leave.defaultdays_casual:
+                        if total_days_applied.days+1 <= 2:
+                            instance = form.save(commit=False)
+                            user = request.user
+                            instance.user = user
+                            instance.save()
+                        else:
+                            return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 2 LEAVES")
+                    else:
+                        return HttpResponse("INSUFFICIENT CALSUAL LEAVE BALANCE")     
+                else:
+                    return HttpResponse("PLAN PRIOR TO 2 DAYS") 
+
+            elif leave_type=="sick":
+                # no_of_days_back= (date.today()-start_date_strptime)
+                print(" NUMBER OF DAYS INSIDE SICK IS : ",no_of_days.days+1)
+                if no_of_days.days+1 >= -3 and no_of_days.days+1 <= 3:
+                    if leave.defaultdays_sick >=1 and total_days_applied.days+1<=leave.defaultdays_sick:
+                        if total_days_applied.days+1 <= 3:
+                            instance = form.save(commit=False)
+                            user = request.user
+                            instance.user = user
+                            instance.save()
+                        else:
+                            return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 3 LEAVES")
+                    else:
+                        return HttpResponse("INSUFFICIENT CALSUAL LEAVE BALANCE")     
+                else:
+                    return HttpResponse("YOU CAN NOT APPLY SICK LEAVE FOR UPCOMING DAYS") 
+   
+
+            else:
+
+                instance = form.save(commit=False)
+                user = request.user
+                instance.user = user
+                instance.save()
+                
+                
+
+                # print(request.POST['startdate'].days)
+
+                # # messages.success(request,"Submitted Successfully! Check <a href=\"{% url 'view_my_leave_table' %}\">STATUS</a>.")
+
+                # #Email functionality------------------------------------------------
+
+                # fname = User.objects.all().get(username=request.user).first_name
+                # lname = User.objects.all().get(username=request.user).last_name
+                # subject = "Leave Application | " + request.POST['leavetype'] + " | " + fname + " " + lname
+                # content = {'fname': fname, 'lname': lname,
+                #         'startdate': request.POST['startdate'], 'enddate': request.POST['enddate'],
+                #         'leavetype': request.POST['leavetype'], 'reason': request.POST['reason']
+                #         }
+                # html_body = get_template('accounts/email.html').render(content)
+                # bod = ""
+                # sent_by = "tejusgowda95@gmail.com"
+                # # manage = Employee.objects.select_related().get(id=request.user.id).email
+                # manage = 'pknptel02@gmail.com'
+                # print("=================================================")
+                # print(manage)
+                # print("=================================================")
+                # leave_applied_by = request.user.email
+                # ## hr group logic pending
+                # print("----", request.user)
+                # msg = EmailMultiAlternatives(subject=subject, from_email=sent_by,
+                #                             to=[leave_applied_by, manage], body=bod)
+                # print("Sent to" + leave_applied_by)
+                # msg.attach_alternative(html_body, "text/html")
+                # msg.send()
+                # print("Mail sent successfully")
+                #-----------------------------------------------------------------------------------------------
+
+                return redirect('view_my_leave_table')
+            
+            messages.error(request, 'number of days for planned leave applied is not valid.')
+            return redirect('applyleave')
         messages.error(request, 'Failed to request a leave. Please check the dates')
         return redirect('applyleave')
     else:
@@ -245,6 +352,20 @@ def leaves_view_mh(request, id):
 @allowed_users(allowed_roles=['manager', 'hr'])
 def approve_leave(request, id):
     leave = get_object_or_404(Leave, id=id)
+    d=leave.leave_days
+    print("==================================================")
+    print("TOTAL NUMBER OF DAYS APPLIED : ",d)
+    print("==================================================")
+    if leave.leavetype=='planned':
+        leave.defaultdays_planned-=d
+        leave.save()
+    elif leave.leavetype=='casual':
+        leave.defaultdays_casual-=d
+        leave.save()
+    elif leave.leavetype=='sick':
+        leave.defaultdays_sick-=d
+        leave.save()
+
     user = leave.user
     employee = Employee.objects.filter(user=user)[0]
     leave.approve_leave
@@ -279,6 +400,18 @@ def leaves_rejected_list(request):
 @allowed_users(allowed_roles=['manager', 'hr'])
 def unapprove_leave(request, id):
     leave = get_object_or_404(Leave, id=id)
+    d=leave.leave_days
+    if leave.leavetype=='planned':
+        leave.defaultdays_planned+=d
+        leave.save()
+    elif leave.leavetype=='casual':
+        leave.defaultdays_casual+=d
+        leave.save()
+    elif leave.leavetype=='sick':
+        leave.defaultdays_sick+=d
+        leave.save()
+    # print("TOTAL NUMBER OF DAYS YOU LEFT : ",leave.defaultdays)
+    # print("==================================================")
     leave.unapprove_leave
     return redirect('leaves_list_mh')  # redirect to unapproved list
 
@@ -362,7 +495,7 @@ def edit_profile(request,id):
 
 
 			instance.hometown = request.POST.get('hometown')
-			instance.region = request.POST.get('region')
+			# instance.region = request.POST.get('region')
 			instance.residence = request.POST.get('residence')
 			instance.address = request.POST.get('address')
 			instance.education = request.POST.get('education')

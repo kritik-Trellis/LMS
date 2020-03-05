@@ -64,11 +64,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'lms',
-        'USER':'postgres',
-        'PASSWORD':'kritik123',
-        'HOST':'localhost',
-        'PORT':'5432'
-    }
+        'USER': 'postgres',
+        'PASSWORD': '1mj16cs105',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }  
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
