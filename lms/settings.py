@@ -62,19 +62,13 @@ WSGI_APPLICATION = 'lms.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'sql_server.pyodbc',
-
-        'NAME': 'LMS',
-        'HOST': '192.168.0.108',
-        'USER': 'sa',
-        'PASSWORD' : 'kritik123',
-        'PORT' : '1433',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 13 for SQL Server',
-            'host_is_server':True,
-            'unicode_results':True,
-        }
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'lms',
+        'USER': 'postgres',
+        'PASSWORD': '1mj16cs105',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }  
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

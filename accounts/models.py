@@ -13,20 +13,22 @@ from django.utils.translation import ugettext as _
 # Create your models here.
 SICK = 'sick'
 CASUAL = 'casual'
-EMERGENCY = 'emergency'
-STUDY = 'study'
+PLANNED = 'planned'
+COMPOFF = 'compoff'
+WORK_FROM_HOME = 'workfromhome'
 
 LEAVE_TYPE = (
 (SICK,'Sick Leave'),
 (CASUAL,'Casual Leave'),
-(EMERGENCY,'Emergency Leave'),
-(STUDY,'Study Leave'),
+(PLANNED,'Planned Leave'),
+(WORK_FROM_HOME,'Work From Home'),
+(COMPOFF,'Compensatory Off')
 )
 
 DAYS_sick = 7
 DAYS_casual = 7
 DAYS_planned = 7
-
+# DAYS = 21
 
 class Leave(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE,default=1)
@@ -34,9 +36,9 @@ class Leave(models.Model):
 	enddate = models.DateField(verbose_name=_('End Date'),null=True,blank=False)
 	leavetype = models.CharField(choices=LEAVE_TYPE,max_length=25,default=SICK,null=True,blank=False)
 	reason = models.CharField(verbose_name=_('Reason for Leave'),max_length=255,help_text='add additional information for leave',null=False,blank=False,default='Unspecified Reason')
-	defaultdays_sick = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS_sick,null=True,blank=True)
-	defaultdays_casual = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS_casual,null=True,blank=True)
-	defaultdays_planned = models.PositiveIntegerField(verbose_name=_('Leave days per year counter'),default=DAYS_planned,null=True,blank=True)
+	defaultdays_sick = models.PositiveIntegerField(verbose_name=_('Sick Leave days per year counter'),default=DAYS_sick,null=True,blank=True)
+	defaultdays_casual = models.PositiveIntegerField(verbose_name=_('Casual Leave days per year counter'),default=DAYS_casual,null=True,blank=True)
+	defaultdays_planned = models.PositiveIntegerField(verbose_name=_('Planned Leave days per year counter'),default=DAYS_planned,null=True,blank=True)
 
 
 	# hrcomments = models.ForeignKey('CommentLeave') #hide
@@ -84,7 +86,7 @@ class Leave(models.Model):
 		if startdate > enddate:
 			return
 		dates = (enddate - startdate)
-		return dates.days
+		return dates.days+1 
 
 
 
@@ -538,6 +540,8 @@ class Employee(models.Model):
     position = models.CharField(_('Position Held'),help_text='what position where you in your last place of work ?',max_length=255,null=True,blank=True)
     # ssnitnumber = models.CharField(_('SSNIT Number'),max_length=30,null=True,blank=True)
     # tinnumber = models.CharField(_('TIN'),max_length=15,null=True,blank=True)
+
+    planned_5_days = models.BooleanField(_("Once applied for 5 days or not?"),default=True,blank=False)
 
     # employee_type = models.CharField(_('Employee Type'),max_length=20)
     # email_id = models.EmailField(_("Email ID"), max_length=254)
