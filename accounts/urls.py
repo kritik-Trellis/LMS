@@ -25,9 +25,9 @@ urlpatterns = [
     path('login/',views.login_,name="login"),
     path('register/',views.register,name="register"),
     path('logout/',views.logout_,name="logout"),
-    path('manager/<int:id>/edit_profile/',views.edit_profile,name='edit_profile'),
+    # path('manager/<int:id>/edit_profile/',views.edit_profile,name='edit_profile'),
     path('user/<int:id>/edit_profile/',views.edit_profile,name='edit_profile'),
-
+    path('user/add_employee/',views.add_employee,name='add_employee'),
     path('reset_password/',
      auth_views.PasswordResetView.as_view(template_name="accounts/password_reset.html"),
      name="reset_password"),
@@ -49,7 +49,9 @@ urlpatterns = [
         PasswordResetView.as_view(),
         name='password_reset'
     ),
-    path('user/<int:id>/edit_profile/',views.edit_profile,name='edit_profile')
+    path('user/<int:id>/edit_profile/',views.edit_profile,name='edit_profile'),
+    path('setpassword/',views.setpassword,name="setpassword"),
+    path('accounts/user/holi/',views.holi,name='holi'),
     # path('email/', views.email, name="email"),
     # path('sendmail/', views.sendmail, name="sendmail"),
 

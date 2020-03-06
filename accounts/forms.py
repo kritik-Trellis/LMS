@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm,UserChangeForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from django import forms
 
 from .models import Leave, Employee
@@ -9,9 +9,16 @@ from django.forms import ModelForm
 import datetime
 
 class createUserForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ['username','email','password1','password2']
+	groups = forms.ModelChoiceField(queryset=Group.objects.all(),required=True)
+	class Meta:
+		model = User
+		fields = ['username','email','password1','password2','groups']
+		widgets={
+			'groups': forms.Select,
+		}
+
+
+		
 
 class loginUserForm(UserCreationForm):
     class Meta:
@@ -36,21 +43,37 @@ class LeaveCreationForm(ModelForm):
 		startdate = self.cleaned_data['startdate']
 		today_date = datetime.date.today()
 
-		if (startdate or enddate) < today_date:# both dates must not be in the past
-			raise forms.ValidationError("You are not genius. You can not go back in time :p")
+		# if (startdate or enddate) < today_date:# both dates must not be in the past
+		# 	raise forms.ValidationError("You are not genius. You can not go back in time :p")
 
-		elif startdate >= enddate:# TRUE -> FUTURE DATE > PAST DATE,FALSE other wise
+		if startdate >= enddate:# TRUE -> FUTURE DATE > PAST DATE,FALSE other wise
 			raise forms.ValidationError("Selected dates are wrong")
 
 		return enddate
 
 
-class EmployeeCreateForm(forms.ModelForm):
+class EmployeeEditForm(forms.ModelForm):
 	# employeeid = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'please enter 5 characters without RGL or slashes eg. A0025'}))
 	image = forms.ImageField(widget=forms.FileInput(attrs={'onchange':'previewImage(this);'}))
 	class Meta:
 		model = Employee
-		exclude = ['is_blocked','is_deleted','created','updated']
+		exclude = ['is_blocked','is_deleted','created','updated','planned_5_days','user']
 		widgets = {
-				'bio':forms.Textarea(attrs={'cols':5,'rows':5})
+				'bio':forms.Textarea(attrs={'cols':10,'rows':10}),
+				'birthday': DateInput(),
+				'startdate': DateInput(),
+				# 'image': forms.FileInput(attrs={'onchange':'previewImage(this);'})
+		}
+
+
+class EmployeeCreationForm(forms.ModelForm):
+	# employeeid = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'please enter 5 characters without RGL or slashes eg. A0025'}))
+	image = forms.ImageField(widget=forms.FileInput(attrs={'onchange':'previewImage(this);'}))
+	class Meta:
+		model = Employee
+		exclude = ['is_blocked','is_deleted','created','updated','planned_5_days']
+		widgets = {
+				'bio':forms.Textarea(attrs={'cols':10,'rows':10}),
+				'birthday': DateInput(),
+				'startdate': DateInput()
 		}

@@ -14,7 +14,7 @@ from .forms import *
 # import jwt
 from .models import *
 from .manager import *
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from .forms import *
 from .decorators import *
 from django.template.loader import get_template
@@ -77,6 +77,15 @@ def login_(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request,user)
+
+
+                employee = Employee.objects.filter(user = user)[0]
+                new_user = employee.last_login is None
+                if new_user:
+                    employee.last_login=datetime.datetime.now()
+                    employee.save()
+                    return redirect('setpassword')
+
                 return redirect('dashboard')
             else:
                 messages.info(request, message="Invalid credentials!")
@@ -93,8 +102,8 @@ def login_(request):
     context = {}
     return render(request, 'accounts/login.html',context)
 
-
-@unauthorized_user
+@login_required(login_url='login')
+@allowed_users(allowed_roles = ['admin','hr'])
 def register(request):
     print('----------')
     form = createUserForm()
@@ -103,9 +112,14 @@ def register(request):
         # pass1=request.POST['password1']
         # pass2=request.POST['password2']
         # if pass1!=pass2:
-
+        group_name=request.POST['groups']
+        print("-----------------------------------")
+        print(group_name)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            group = Group.objects.get(id=group_name)
+            user.groups.add(group)
+            # form.save()
             return redirect('login')
         else:
             # print(form.ValidationError)
@@ -159,7 +173,7 @@ def applyleave(request):
             print("START DATE STRIP TIME FORMAT : ",start_date_strptime)
             print("TYPE OF DATE OBJECT : ",type(start_date_strptime))
             
-            no_of_days= abs((date.today()-start_date_strptime))
+            no_of_days= (date.today()-start_date_strptime)
             print("NUMBER OF DAYS FROM CURRENT DATE APPLIED TO : ",no_of_days)
 
             total_days_applied=(end_date_strptime-start_date_strptime)
@@ -168,12 +182,15 @@ def applyleave(request):
             # employee = Employee(user=request.user)
             leave = Leave(user=request.user)
             employee = Employee.objects.get(user=request.user)
-
+            employee_id=employee.id
             if leave_type=="planned":
-                if no_of_days.days>=14:
+                if no_of_days.days<=-14:
                     print("=========================================================")
                     print("TOTAL DAYS APPLIED.DAYS + 1 : ",total_days_applied.days+1)
                     print("=========================================================")
+                    print("value of employee ",employee.id)
+                    print("=========================================================")
+
                     # print("FORMAT FOR NUMBER OF DAYS INSIDE PLANNED CONDITION FOR 14 DAYS IS :",int(no_of_days[0]))
                     if leave.defaultdays_planned >=1 and total_days_applied.days+1<=leave.defaultdays_planned:
                         if total_days_applied.days+1 == 5:
@@ -183,10 +200,11 @@ def applyleave(request):
                             if employee.planned_5_days == True:
                                 print("HELOWWWWWWWWWWWWWWWWWW WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
                                 instance = form.save(commit=False)
-                                employee.update(planned_5_days=False)
+                                Employee.objects.filter(pk=employee_id).update(planned_5_days=False)
                                 user = request.user
                                 instance.user = user
                                 instance.save()
+                                return redirect('view_my_leave_table')
                             else:
                                 return HttpResponse("YOU ARE ELIGIBLE TO APPLY FOR 5 DAYS LEAVE, ONLY ONCE PER YEAR")
                         
@@ -195,6 +213,7 @@ def applyleave(request):
                             user = request.user
                             instance.user = user
                             instance.save()
+                            return redirect('view_my_leave_table')
                         else:
                             return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 5 DAYS OR BETWEEN 3 TO 5")
                     else:
@@ -204,13 +223,14 @@ def applyleave(request):
 
                
             elif leave_type=="casual":
-                if no_of_days.days>=2:
+                if no_of_days.days<=-2:
                     if leave.defaultdays_casual >=1 and total_days_applied.days+1<=leave.defaultdays_casual:
                         if total_days_applied.days+1 <= 2:
                             instance = form.save(commit=False)
                             user = request.user
                             instance.user = user
                             instance.save()
+                            return redirect('view_my_leave_table')
                         else:
                             return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 2 LEAVES")
                     else:
@@ -220,6 +240,7 @@ def applyleave(request):
 
             elif leave_type=="sick":
                 # no_of_days_back= (date.today()-start_date_strptime)
+                print("---------------------------------")
                 print(" NUMBER OF DAYS INSIDE SICK IS : ",no_of_days.days+1)
                 if no_of_days.days+1 >= -3 and no_of_days.days+1 <= 3:
                     if leave.defaultdays_sick >=1 and total_days_applied.days+1<=leave.defaultdays_sick:
@@ -228,12 +249,13 @@ def applyleave(request):
                             user = request.user
                             instance.user = user
                             instance.save()
+                            return redirect('view_my_leave_table')
                         else:
                             return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 3 LEAVES")
                     else:
                         return HttpResponse("INSUFFICIENT CALSUAL LEAVE BALANCE")     
                 else:
-                    return HttpResponse("YOU CAN NOT APPLY SICK LEAVE FOR UPCOMING DAYS") 
+                    return HttpResponse("YOU CAN  ONLY APPLY SICK LEAVE IN WINDOW OF 3 DAYS") 
    
 
             else:
@@ -242,6 +264,7 @@ def applyleave(request):
                 user = request.user
                 instance.user = user
                 instance.save()
+                return redirect('view_my_leave_table')
                 
                 
 
@@ -277,7 +300,7 @@ def applyleave(request):
                 # print("Mail sent successfully")
                 #-----------------------------------------------------------------------------------------------
 
-                return redirect('view_my_leave_table')
+                # return redirect('view_my_leave_table')
             
             messages.error(request, 'number of days for planned leave applied is not valid.')
             return redirect('applyleave')
@@ -462,13 +485,14 @@ def edit_profile(request,id):
     #     return render(request,'accounts/edit_profile.html',context)
 
 	employee = get_object_or_404(Employee, id = id)
+	form = EmployeeEditForm(request.POST or None,request.FILES or None,instance = employee)
+
 	if request.method == 'POST':
-		form = EmployeeCreateForm(request.POST or None,request.FILES or None,instance = employee)
 		if form.is_valid():
 			instance = form.save(commit = False)
 
-			user = request.POST.get('user')
-			assigned_user = User.objects.get(id = user)
+			# user = request.POST.get('user')
+			assigned_user = User.objects.get(id = request.user.id)
 
 			instance.user = assigned_user
 
@@ -476,7 +500,7 @@ def edit_profile(request,id):
 			instance.image = request.FILES.get('image')
 			instance.firstname = request.POST.get('firstname')
 			instance.lastname = request.POST.get('lastname')
-			instance.othername = request.POST.get('othername')
+			# instance.othername = request.POST.get('othername')
 			instance.sex = request.POST.get('sex')
 			instance.bio = request.POST.get('bio')
 			instance.birthday = request.POST.get('birthday')
@@ -496,7 +520,7 @@ def edit_profile(request,id):
 
 			instance.hometown = request.POST.get('hometown')
 			# instance.region = request.POST.get('region')
-			instance.residence = request.POST.get('residence')
+			# instance.residence = request.POST.get('residence')
 			instance.address = request.POST.get('address')
 			instance.education = request.POST.get('education')
 			instance.lastwork = request.POST.get('lastwork')
@@ -511,7 +535,7 @@ def edit_profile(request,id):
 			instance.startdate = request.POST.get('startdate')
 			instance.employeetype = request.POST.get('employeetype')
 			instance.employeeid = request.POST.get('employeeid')
-			instance.dateissued = request.POST.get('dateissued')
+			# instance.dateissued = request.POST.get('dateissued')
 
 			# now = datetime.datetime.now()
 			# instance.created = now
@@ -521,13 +545,13 @@ def edit_profile(request,id):
 			# messages.success(request,'Account Updated Successfully !!!',extra_tags = 'alert alert-success alert-dismissible show')
 			return redirect('user')
 
-		else:
+		# else:
 
-			# messages.error(request,'Error Updating account',extra_tags = 'alert alert-warning alert-dismissible show')
-			return HttpResponse("Form data not valid")
+		# 	# messages.error(request,'Error Updating account',extra_tags = 'alert alert-warning alert-dismissible show')
+		# 	return HttpResponse("Form data not valid")
 
 	dataset = dict()
-	form = EmployeeCreateForm(request.POST or None,request.FILES or None,instance = employee)
+	form = EmployeeEditForm(request.POST or None,request.FILES or None,instance = employee)
 	dataset['form'] = form
 	dataset['title'] = 'edit - {0}'.format(employee.get_full_name)
 	return render(request,'accounts/edit_profile.html',dataset)
@@ -565,3 +589,81 @@ def edit_profile(request,id):
 #                 'error': 'The form was not updated successfully. Please enter in a title and content'}
 #     return render(request,'accounts/edit_profile.html',context)
 
+
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin','hr'])
+def add_employee(request):
+    form=EmployeeCreationForm(request.POST or None,request.FILES or None)
+    context={}
+    context['form']=form
+    if request.method == 'POST':
+        user = request.POST['user']
+        u = User.objects.get(id=user)
+        if u is not None:
+            title = request.POST.get('title')
+            image = request.FILES.get('image')
+            firstname = request.POST.get('firstname')
+            lastname = request.POST.get('lastname')
+            # othername = request.POST.get('othername')
+            sex = request.POST.get('sex')
+            bio = request.POST.get('bio')
+            birthday = request.POST.get('birthday')
+            # religion_id = request.POST.get('religion')
+            # religion = Religion.objects.get(id = religion_id)
+            # religion = religion
+            # nationality_id = request.POST.get('nationality')
+            # nationality = Nationality.objects.get(id = nationality_id)
+            # nationality = nationality
+            department_id = request.POST.get('department')
+            department = Department.objects.get(id = department_id)
+            department = department
+            hometown = request.POST.get('hometown')
+            # region = request.POST.get('region')
+            # residence = request.POST.get('residence')
+            address = request.POST.get('address')
+            education = request.POST.get('education')
+            lastwork = request.POST.get('lastwork')
+            position = request.POST.get('position')
+            # ssnitnumber = request.POST.get('ssnitnumber')
+            # tinnumber = request.POST.get('tinnumber')
+            role = request.POST.get('role')
+            role_instance = Role.objects.get(id = role)
+            role = role_instance
+            startdate = request.POST.get('startdate')
+            employeetype = request.POST.get('employeetype')
+            # employeeid = request.POST.get('employeeid')
+            # dateissued = request.POST.get('dateissued')
+            # lastlogin=None
+            employee = Employee.objects.get_or_create(user=u,title=title,image=image,
+            firstname=firstname,lastname=lastname,sex=sex,bio=bio,birthday=birthday,
+            department=department,hometown=hometown,address=address,education=education,
+            lastwork=lastwork,position=position,role=role,startdate=startdate,employeetype=employeetype)
+            # employee.save()
+            return redirect('user')
+        else:
+            messages.error(request,'No such user exists')
+    return render(request, 'accounts/add_employee.html',context)
+
+
+
+
+def setpassword(request):
+    if request.method == 'POST':
+        newpassword=request.POST.get('newpassword')
+        confirmpassword=request.POST.get('confirmpassword')
+        u = User.objects.get(username=request.user)
+        if newpassword==confirmpassword:
+            u.set_password(newpassword)
+            u.save()
+            return redirect('login')
+        else:
+            messages.error(request,'Password did not match!enter the correct password')
+            return redirect('setpassword')
+    return render(request, 'accounts/setpassword.html')
+
+
+
+def holi(request):
+    return render(request,'accounts/holi.html')

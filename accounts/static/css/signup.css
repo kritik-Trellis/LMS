@@ -138,3 +138,9 @@ h1{
     color: #fff;
     text-align: center;
 }
+
+#id_groups{
+    padding: 0.5em 0.5em;
+    display: inline;
+    margin: 0px 0px 7px 0px;
+}

@@ -129,8 +129,8 @@
                 </aside>
                     <div class="menu">
                         <ul>
-                            <li><a href="{% url 'home' %}">Home</a></li>
-                            <li><a href="{% url 'login' %}">Login</a></li>
+                            <li><a href="{% url 'dashboard' %}">Home</a></li>
+                            {% comment %} <li><a href="{% url 'login' %}">Login</a></li> {% endcomment %}
                         </ul>
                     </div>
 
@@ -141,6 +141,8 @@
                     <form name="myForm" method ="POST" action = "" >
                         {% csrf_token %}
                     <!-- <p>Username</p> -->
+                    <p style="display:inline;">Groups:</p>
+                        {{ form.groups }}
                         {{ form.username }}
                         {{form.errors.username}}                    <!-- <p>Email</p> -->
                         {{ form.email }}

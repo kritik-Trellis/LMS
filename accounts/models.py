@@ -11,6 +11,7 @@ from django.utils.translation import ugettext as _
 
 
 # Create your models here.
+NONE='none'
 SICK = 'sick'
 CASUAL = 'casual'
 PLANNED = 'planned'
@@ -18,8 +19,10 @@ COMPOFF = 'compoff'
 WORK_FROM_HOME = 'workfromhome'
 
 LEAVE_TYPE = (
-(SICK,'Sick Leave'),
+(NONE,'none'),
 (CASUAL,'Casual Leave'),
+(SICK,'Sick Leave'),
+
 (PLANNED,'Planned Leave'),
 (WORK_FROM_HOME,'Work From Home'),
 (COMPOFF,'Compensatory Off')
@@ -34,7 +37,7 @@ class Leave(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE,default=1)
 	startdate = models.DateField(verbose_name=_('Start Date'),null=True,blank=False)
 	enddate = models.DateField(verbose_name=_('End Date'),null=True,blank=False)
-	leavetype = models.CharField(choices=LEAVE_TYPE,max_length=25,default=SICK,null=True,blank=False)
+	leavetype = models.CharField(choices=LEAVE_TYPE,max_length=25,default=NONE,null=True,blank=False)
 	reason = models.CharField(verbose_name=_('Reason for Leave'),max_length=255,help_text='add additional information for leave',null=False,blank=False,default='Unspecified Reason')
 	defaultdays_sick = models.PositiveIntegerField(verbose_name=_('Sick Leave days per year counter'),default=DAYS_sick,null=True,blank=True)
 	defaultdays_casual = models.PositiveIntegerField(verbose_name=_('Casual Leave days per year counter'),default=DAYS_casual,null=True,blank=True)
@@ -519,25 +522,25 @@ class Employee(models.Model):
     # PERSONAL DATA
     user = models.ForeignKey(User,on_delete=models.CASCADE,default=1)
     title = models.CharField(_('Title'),max_length=4,default=MR,choices=TITLE,blank=False,null=True)
-    image = models.ImageField(_('Profile Image'),upload_to='profiles',default='default.png',blank=True,null=True,help_text='upload image size less than 2.0MB')#work on path username-date/image
+    image = models.ImageField(_('Profile Image'),upload_to='profiles',default='default.png',blank=True,null=True)#work on path username-date/image
     firstname = models.CharField(_('Firstname'),max_length=125,null=False,blank=False)
     lastname = models.CharField(_('Lastname'),max_length=125,null=False,blank=False)
-    othername = models.CharField(_('Othername (optional)'),max_length=125,null=True,blank=True)
+    # othername = models.CharField(_('Othername (optional)'),max_length=125,null=True,blank=True)
     sex = models.CharField(_('Gender'),max_length=8,default=MALE,choices=GENDER,blank=False)
     email = models.CharField(_('Email (optional)'),max_length=255,default=None,blank=True,null=True)
-    tel = PhoneNumberField(default='+233240000000', null = False, blank=False, verbose_name='Phone Number (Example +233240000000)', help_text= 'Enter number with Country Code Eg. +233240000000')
-    bio = models.CharField(_('Bio'),help_text='your biography,tell me something about yourself eg. i love working ...',max_length=255,default='',null=True,blank=True)
+    tel = PhoneNumberField(default='+233240000000', null = False, blank=False)
+    bio = models.CharField(_('Bio'),max_length=255,default='',null=True,blank=True)
     birthday = models.DateField(_('Birthday'),blank=False,null=False)
     # religion = models.ForeignKey(Religion,verbose_name =_('Religion'),on_delete=models.SET_NULL,null=True,default=None)
     # nationality = models.ForeignKey(Nationality,verbose_name =_('Nationality'),on_delete=models.SET_NULL,null=True,default=None)
     hometown = models.CharField(_('Hometown'),max_length=125,null=True,blank=True)
     # region = models.CharField(_('Region'),help_text='what region of the country(Ghana) are you from ?',max_length=20,default=GREATER,choices=GHANA_REGIONS,blank=False,null=True)
-    residence = models.CharField(_('Current Residence'),max_length=125,null=False,blank=False)
-    address = models.CharField(_('Address'),help_text='address of current residence',max_length=125,null=True,blank=True)
+    # residence = models.CharField(_('Current Residence'),max_length=125,null=False,blank=False)
+    address = models.TextField(_('Address'),max_length=125,null=True,blank=True)
 
-    education = models.CharField(_('Education'),help_text='highest educational standard ie. your last level of schooling',max_length=40,default=SENIORHIGH,choices=EDUCATIONAL_LEVEL,blank=False,null=True)
-    lastwork = models.CharField(_('Last Place of Work'),help_text='where was the last place you worked ?',max_length=125,null=True,blank=True)
-    position = models.CharField(_('Position Held'),help_text='what position where you in your last place of work ?',max_length=255,null=True,blank=True)
+    education = models.CharField(_('Education'),max_length=40,default=SENIORHIGH,choices=EDUCATIONAL_LEVEL,blank=False,null=True)
+    lastwork = models.CharField(_('Last Place of Work'),max_length=125,null=True,blank=True)
+    position = models.CharField(_('Position Held'),max_length=255,null=True,blank=True)
     # ssnitnumber = models.CharField(_('SSNIT Number'),max_length=30,null=True,blank=True)
     # tinnumber = models.CharField(_('TIN'),max_length=15,null=True,blank=True)
 
@@ -550,13 +553,15 @@ class Employee(models.Model):
     reporting_to = models.ForeignKey('self', related_name='subordinates', blank=True, null=True, help_text='Reporting To',on_delete=models.SET_NULL)
 
 
+    last_login=models.DateTimeField(blank=True,null=True)
+
     # COMPANY DATA
     department =  models.ForeignKey(Department,verbose_name =_('Department'),on_delete=models.SET_NULL,null=True,default=None)
     role =  models.ForeignKey(Role,verbose_name =_('Role'),on_delete=models.SET_NULL,null=True,default=None)
     startdate = models.DateField(_('Employement Date'),help_text='date of employement',blank=False,null=True)
     employeetype = models.CharField(_('Employee Type'),max_length=15,default=FULL_TIME,choices=EMPLOYEETYPE,blank=False,null=True)
-    employeeid = models.CharField(_('Employee ID Number'),max_length=10,null=True,blank=True)
-    dateissued = models.DateField(_('Date Issued'),help_text='date staff id was issued',blank=False,null=True)
+    # employeeid = models.CharField(_('Employee ID Number'),max_length=10,null=True,blank=True)
+    # dateissued = models.DateField(_('Date Issued'),blank=False,null=True)
 
     #app related
     is_blocked = models.BooleanField(_('Is Blocked'),help_text='button to toggle employee block and unblock',default=False)
@@ -588,14 +593,12 @@ class Employee(models.Model):
         fullname = ''
         firstname = self.firstname
         lastname = self.lastname
-        othername = self.othername
+        # othername = self.othername
 
-        if (firstname and lastname) or othername is None:
+        if (firstname and lastname) is not None:
             fullname = firstname +' '+ lastname
             return fullname
-        elif othername:
-            fullname = firstname + ' '+ lastname +' '+othername
-            return fullname
+       
         return
 
 
@@ -669,18 +672,18 @@ class Employee(models.Model):
 
 
 
-    def save(self,*args,**kwargs):
-        '''
-        overriding the save method - for every instance that calls the save method
-        perform this action on its employee_id
-        added : March, 03 2019 - 11:08 PM
+#    def save(self,*args,**kwargs):
+#         '''
+#         overriding the save method - for every instance that calls the save method
+#         perform this action on its employee_id
+#         added : March, 03 2019 - 11:08 PM
 
-        '''
-        get_id = self.employeeid #grab employee_id number from submitted form field
-        data = code_format(get_id)
-        self.employeeid = data #pass the new code to the employee_id as its orifinal or actual code
-        super().save(*args,**kwargs) # call the parent save method
-        # print(self.employeeid)
+#         '''
+#         # get_id = self.employeeid #grab employee_id number from submitted form field
+#         data = code_format(get_id)
+#         self.employeeid = data #pass the new code to the employee_id as its orifinal or actual code
+#         super().save(*args,**kwargs) # call the parent save method
+#         # print(self.employeeid)
 
 
 class MailingGroup(models.Model):

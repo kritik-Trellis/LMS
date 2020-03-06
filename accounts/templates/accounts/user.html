@@ -48,16 +48,16 @@
 		<section class="hero-section">
 			<div class="container-fluid text-center">
 				<div class="profile_image">
-				{% if employee.image.url %}
+				 {% if employee.image.url %}
 				<img src="{{ employee.image.url }}" alt="">
-				{% endif %}
+				{% endif %} 
 				<div>
 				<div class="hero-text">
 					<h2 style="font-size:45px;">{{ employee }}</h2>
 					<p style="font-size:30px;">{{ employee.bio }}</p>
 				</div>
 				<div class="social-links">
-                    <a href="">LeaveCalender</a>
+                    <a href="{% url 'holi'  %}">LeaveCalender</a>
 					{% comment %} <a href="{% url 'editform' employee.id %}">EditProfile</a> {% endcomment %}
 					<a href="{% url 'edit_profile' employee.id %}">EditProfile</a>
 				</div>
