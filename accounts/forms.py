@@ -46,7 +46,7 @@ class LeaveCreationForm(ModelForm):
 		# if (startdate or enddate) < today_date:# both dates must not be in the past
 		# 	raise forms.ValidationError("You are not genius. You can not go back in time :p")
 
-		if startdate >= enddate:# TRUE -> FUTURE DATE > PAST DATE,FALSE other wise
+		if startdate > enddate:# TRUE -> FUTURE DATE > PAST DATE,FALSE other wise
 			raise forms.ValidationError("Selected dates are wrong")
 
 		return enddate
@@ -54,7 +54,7 @@ class LeaveCreationForm(ModelForm):
 
 class EmployeeEditForm(forms.ModelForm):
 	# employeeid = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'please enter 5 characters without RGL or slashes eg. A0025'}))
-	image = forms.ImageField(widget=forms.FileInput(attrs={'onchange':'previewImage(this);'}))
+	# image = forms.ImageField(widget=forms.FileInput(attrs={'onchange':'previewImage(this);'}))
 	class Meta:
 		model = Employee
 		exclude = ['is_blocked','is_deleted','created','updated','planned_5_days','user']
@@ -62,7 +62,7 @@ class EmployeeEditForm(forms.ModelForm):
 				'bio':forms.Textarea(attrs={'cols':10,'rows':10}),
 				'birthday': DateInput(),
 				'startdate': DateInput(),
-				# 'image': forms.FileInput(attrs={'onchange':'previewImage(this);'})
+				
 		}
 
 

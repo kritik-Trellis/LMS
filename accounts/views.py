@@ -120,7 +120,7 @@ def register(request):
             group = Group.objects.get(id=group_name)
             user.groups.add(group)
             # form.save()
-            return redirect('login')
+            return redirect('dashboard')
         else:
             # print(form.ValidationError)
             print(type(form.errors))
@@ -162,17 +162,55 @@ def applyleave(request):
             print(request.POST['startdate'])
             print(request.POST['enddate'])
 
+            
             start_date_strptime = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+            temp_start_date_strptime = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+            
             end_date_strptime = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+            day_name=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+            start_day_no=start_date_strptime.weekday()
+            end_day_no=end_date_strptime.weekday()
+            td=0
+            next_date=start_date_strptime + datetime.timedelta(days=1)
 
             date=datetime.date
 
             
             print("DATE OBJECT FORMAT : ",date.today())
+            print("Current Year : ",date.today().year)
             print("TYPE OF DATE OBJECT : ",type(date.today()))
             print("START DATE STRIP TIME FORMAT : ",start_date_strptime)
             print("TYPE OF DATE OBJECT : ",type(start_date_strptime))
+            print("DAY Number ON  START DATE**** : ",start_date_strptime.weekday())
+            print("Start Day name-----",day_name[start_day_no])
+            print("End Day name-----",day_name[end_day_no])
+            print("next date++++",next_date)
             
+
+            while temp_start_date_strptime<=end_date_strptime:
+                # start_day=day_name[temp_start_date_strptime.weekday()]
+                # print("   ",start_day)
+                if start_day!='Saturday' and start_day!='Sunday':
+                    td+=1
+                    # print("td",td)
+                    next_date=temp_start_date_strptime + datetime.timedelta(days=1)
+                    # print("nextDAte",next_date)
+                    temp_start_date_strptime=next_date
+                    # print("temp strt",temp_start_date_strptime)
+                else:
+                    next_date=temp_start_date_strptime + datetime.timedelta(days=1)
+                    temp_start_date_strptime=next_date
+
+
+
+                
+
+            print("NEW ogic for total days====",td)
+            year_diff=(date.today().year - start_date_strptime.year)
+            print("TYPE of year_diff : ",year_diff)
+
+            print("TYPE of year_diff : ",type(year_diff))
+
             no_of_days= (date.today()-start_date_strptime)
             print("NUMBER OF DAYS FROM CURRENT DATE APPLIED TO : ",no_of_days)
 
@@ -184,79 +222,102 @@ def applyleave(request):
             employee = Employee.objects.get(user=request.user)
             employee_id=employee.id
             if leave_type=="planned":
-                if no_of_days.days<=-14:
-                    print("=========================================================")
-                    print("TOTAL DAYS APPLIED.DAYS + 1 : ",total_days_applied.days+1)
-                    print("=========================================================")
-                    print("value of employee ",employee.id)
-                    print("=========================================================")
 
-                    # print("FORMAT FOR NUMBER OF DAYS INSIDE PLANNED CONDITION FOR 14 DAYS IS :",int(no_of_days[0]))
-                    if leave.defaultdays_planned >=1 and total_days_applied.days+1<=leave.defaultdays_planned:
-                        if total_days_applied.days+1 == 5:
-                            print("TYPE OF PLANNED_5_DAYS VARIBALE : ",type(employee.planned_5_days))
-                            print("VALUE OF PLANNED_5_DAYS VARIBALE : ",employee.planned_5_days)
-                            print("NAME OF THE EMPLOYEE IS : ",employee.firstname)
-                            if employee.planned_5_days == True:
-                                print("HELOWWWWWWWWWWWWWWWWWW WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+                if year_diff==0:
+
+                
+                    if no_of_days.days<=-14:
+                        print("=========================================================")
+                        print("TOTAL DAYS APPLIED.DAYS + 1 : ",total_days_applied.days+1)
+                        print("=========================================================")
+                        print("value of employee ",employee.id)
+                        print("=========================================================")
+
+                        # print("FORMAT FOR NUMBER OF DAYS INSIDE PLANNED CONDITION FOR 14 DAYS IS :",int(no_of_days[0]))
+                        if leave.defaultdays_planned >=1 and td<=leave.defaultdays_planned:
+                            if td == 5:
+                                print("TYPE OF PLANNED_5_DAYS VARIBALE : ",type(employee.planned_5_days))
+                                print("VALUE OF PLANNED_5_DAYS VARIBALE : ",employee.planned_5_days)
+                                print("NAME OF THE EMPLOYEE IS : ",employee.firstname)
+                                if employee.planned_5_days == True:
+                                    print("HELOWWWWWWWWWWWWWWWWWW WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+                                    instance = form.save(commit=False)
+                                    Employee.objects.filter(pk=employee_id).update(planned_5_days=False)
+                                    user = request.user
+                                    instance.user = user
+                                    instance.save()
+                                    return redirect('view_my_leave_table')
+                                else:
+                                    return HttpResponse("YOU ARE ELIGIBLE TO APPLY FOR 5 DAYS LEAVE, ONLY ONCE PER YEAR")
+                            
+                            elif td <= 2:
                                 instance = form.save(commit=False)
-                                Employee.objects.filter(pk=employee_id).update(planned_5_days=False)
                                 user = request.user
                                 instance.user = user
                                 instance.save()
                                 return redirect('view_my_leave_table')
                             else:
-                                return HttpResponse("YOU ARE ELIGIBLE TO APPLY FOR 5 DAYS LEAVE, ONLY ONCE PER YEAR")
-                        
-                        elif total_days_applied.days+1 <= 2:
-                            instance = form.save(commit=False)
-                            user = request.user
-                            instance.user = user
-                            instance.save()
-                            return redirect('view_my_leave_table')
+                                return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 5 DAYS OR BETWEEN 3 TO 5")
                         else:
-                            return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 5 DAYS OR BETWEEN 3 TO 5")
+                            return HttpResponse("IN SUFFICIENT PLANNED LEAVE BALANCE")     
                     else:
-                        return HttpResponse("IN SUFFICIENT PLANNED LEAVE BALANCE")     
+                        return HttpResponse("PLAN PRIOR TO 14 DAYS")
                 else:
-                    return HttpResponse("PLAN PRIOR TO 14 DAYS")               
+                    return HttpResponse("YOU CAN ONLY APPLY LEAVE FOR CURRENT YEAR")               
 
                
             elif leave_type=="casual":
-                if no_of_days.days<=-2:
-                    if leave.defaultdays_casual >=1 and total_days_applied.days+1<=leave.defaultdays_casual:
-                        if total_days_applied.days+1 <= 2:
-                            instance = form.save(commit=False)
-                            user = request.user
-                            instance.user = user
-                            instance.save()
-                            return redirect('view_my_leave_table')
+
+                if year_diff==0:
+
+
+
+                    if no_of_days.days<=-2:
+                        if leave.defaultdays_casual >=1 and total_days_applied.days+1<=leave.defaultdays_casual:
+                            if total_days_applied.days+1 <= 2:
+                                instance = form.save(commit=False)
+                                user = request.user
+                                instance.user = user
+                                instance.save()
+                                return redirect('view_my_leave_table')
+                            else:
+                                return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 2 LEAVES")
                         else:
-                            return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 2 LEAVES")
+                            return HttpResponse("INSUFFICIENT CALSUAL LEAVE BALANCE")     
                     else:
-                        return HttpResponse("INSUFFICIENT CALSUAL LEAVE BALANCE")     
-                else:
-                    return HttpResponse("PLAN PRIOR TO 2 DAYS") 
+                        return HttpResponse("PLAN PRIOR TO 2 DAYS")
+                        
+                        return HttpResponse("YOU CAN ONLY APPLY LEAVE FOR CURRENT YEAR ") 
+                
+
+                
 
             elif leave_type=="sick":
                 # no_of_days_back= (date.today()-start_date_strptime)
                 print("---------------------------------")
                 print(" NUMBER OF DAYS INSIDE SICK IS : ",no_of_days.days+1)
-                if no_of_days.days+1 >= -3 and no_of_days.days+1 <= 3:
-                    if leave.defaultdays_sick >=1 and total_days_applied.days+1<=leave.defaultdays_sick:
-                        if total_days_applied.days+1 <= 3:
-                            instance = form.save(commit=False)
-                            user = request.user
-                            instance.user = user
-                            instance.save()
-                            return redirect('view_my_leave_table')
+
+                if year_diff==0:
+
+    
+                    if no_of_days.days+1 >= -3 and no_of_days.days+1 <= 3:
+                        if leave.defaultdays_sick >=1 and td<=leave.defaultdays_sick:
+                            if td <= 3:
+                                instance = form.save(commit=False)
+                                user = request.user
+                                instance.user = user
+                                instance.save()
+                                return redirect('view_my_leave_table')
+                            else:
+                                return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 3 LEAVES")
                         else:
-                            return HttpResponse("YOU HAVE APPLIED FOR MORE THAN 3 LEAVES")
+                            return HttpResponse("INSUFFICIENT CALSUAL LEAVE BALANCE")     
                     else:
-                        return HttpResponse("INSUFFICIENT CALSUAL LEAVE BALANCE")     
+                        return HttpResponse("YOU CAN  ONLY APPLY SICK LEAVE IN WINDOW OF 3 DAYS") 
+
                 else:
-                    return HttpResponse("YOU CAN  ONLY APPLY SICK LEAVE IN WINDOW OF 3 DAYS") 
-   
+                    return HttpResponse("YOU CAN ONLY APPLY LEAVE FOR CURRENT YEAR")
+    
 
             else:
 
@@ -450,111 +511,28 @@ def unreject_leave(request, id):
     # messages.success(request,'Leave is now in pending list ',extra_tags = 'alert alert-success alert-dismissible show')
     return redirect('leaves_list_mh')
 
-@login_required(login_url='login')
+@login_required()
 def edit_profile(request,id):
 
-    # obj= get_object_or_404(Employee,id=id)
-    # # if request.method=='POST':
-    # #     form=EditProfileForm(request.POST or None,request.FILES,instance=obj)
-    # #
-    # #     if form.is_valid():
-    # #         form.save()
-    # #         return redirect('/account/manager')
-    # #
-    # #
-    # # form=EditProfileForm(request.POST or None,request.FILES,instance=request.user)
-    # # print(form)
-    # # context={'form':form}
-    # # return render(request,'accounts/edit_profile.html',context)
 
-    # form = EditProfileForm(request.POST or None, instance= obj)
-    # context= {'form': form}
+    employee = get_object_or_404(Employee, id = id)
+	
+    if request.method == 'POST':
+        form = EmployeeEditForm(request.POST or None,files=request.FILES or None,instance = employee)
+        if form.is_valid():
+            form.save()
+            return redirect('user')
 
-    # if form.is_valid():
-    #     obj= form.save(commit= False)
+  
+    else:
+        form=EmployeeEditForm(instance=employee)
 
-    #     obj.save()
+    
 
-    #     context= {'form': form}
-
-    #     return redirect('user')
-
-    # else:
-    #     context= {'form': form,
-    #                'error': 'The form was not updated successfully. Please enter in a title and content'}
-    #     return render(request,'accounts/edit_profile.html',context)
-
-	employee = get_object_or_404(Employee, id = id)
-	form = EmployeeEditForm(request.POST or None,request.FILES or None,instance = employee)
-
-	if request.method == 'POST':
-		if form.is_valid():
-			instance = form.save(commit = False)
-
-			# user = request.POST.get('user')
-			assigned_user = User.objects.get(id = request.user.id)
-
-			instance.user = assigned_user
-
-			instance.title = request.POST.get('title')
-			instance.image = request.FILES.get('image')
-			instance.firstname = request.POST.get('firstname')
-			instance.lastname = request.POST.get('lastname')
-			# instance.othername = request.POST.get('othername')
-			instance.sex = request.POST.get('sex')
-			instance.bio = request.POST.get('bio')
-			instance.birthday = request.POST.get('birthday')
-
-			# religion_id = request.POST.get('religion')
-			# religion = Religion.objects.get(id = religion_id)
-			# instance.religion = religion
-
-			# nationality_id = request.POST.get('nationality')
-			# nationality = Nationality.objects.get(id = nationality_id)
-			# instance.nationality = nationality
-
-			department_id = request.POST.get('department')
-			department = Department.objects.get(id = department_id)
-			instance.department = department
-
-
-			instance.hometown = request.POST.get('hometown')
-			# instance.region = request.POST.get('region')
-			# instance.residence = request.POST.get('residence')
-			instance.address = request.POST.get('address')
-			instance.education = request.POST.get('education')
-			instance.lastwork = request.POST.get('lastwork')
-			instance.position = request.POST.get('position')
-			# instance.ssnitnumber = request.POST.get('ssnitnumber')
-			# instance.tinnumber = request.POST.get('tinnumber')
-
-			role = request.POST.get('role')
-			role_instance = Role.objects.get(id = role)
-			instance.role = role_instance
-
-			instance.startdate = request.POST.get('startdate')
-			instance.employeetype = request.POST.get('employeetype')
-			instance.employeeid = request.POST.get('employeeid')
-			# instance.dateissued = request.POST.get('dateissued')
-
-			# now = datetime.datetime.now()
-			# instance.created = now
-			# instance.updated = now
-
-			instance.save()
-			# messages.success(request,'Account Updated Successfully !!!',extra_tags = 'alert alert-success alert-dismissible show')
-			return redirect('user')
-
-		# else:
-
-		# 	# messages.error(request,'Error Updating account',extra_tags = 'alert alert-warning alert-dismissible show')
-		# 	return HttpResponse("Form data not valid")
-
-	dataset = dict()
-	form = EmployeeEditForm(request.POST or None,request.FILES or None,instance = employee)
-	dataset['form'] = form
-	dataset['title'] = 'edit - {0}'.format(employee.get_full_name)
-	return render(request,'accounts/edit_profile.html',dataset)
+    context={}
+    context['form']=form
+    
+    return render(request,'accounts/edit_profile.html',context)
 
 # @login_required(login_url='login')
 # def edit_profile(request,id):
@@ -641,7 +619,7 @@ def add_employee(request):
             department=department,hometown=hometown,address=address,education=education,
             lastwork=lastwork,position=position,role=role,startdate=startdate,employeetype=employeetype)
             # employee.save()
-            return redirect('user')
+            return redirect('dashboard')
         else:
             messages.error(request,'No such user exists')
     return render(request, 'accounts/add_employee.html',context)
